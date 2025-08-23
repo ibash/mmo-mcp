@@ -1,0 +1,13 @@
+[project]
+name = "mmo-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp",
+    "pydantic>=2.11.7",
+]
+
+[tool.uv.sources]
+fastmcp = { git = "https://github.com/ibash/fastmcp.git" }
