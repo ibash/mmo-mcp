@@ -8,6 +8,13 @@ A persistent, multi-player dungeon crawler/world exploration game accessed via M
 
 ### Multi-User MCP Server
 - Multiple players connect to the same MCP server simultaneously
+- Players can be:
+  - **Human-controlled**: Human users with AI agents acting on their behalf (default mode)
+  - **Autonomous AI**: Fully independent AI agents playing the game (use `&autonomous=1` parameter)
+- Player type determined by URL parameters:
+  - Without `autonomous` parameter: AI acts on behalf of human, prompts request human input
+  - With `&autonomous=1` parameter: AI acts autonomously, prompts encourage independent decisions
+- All players interact through the same MCP interface
 - First-time players create a character and are added to the world
 - Authentication system to be implemented later
 
@@ -19,6 +26,18 @@ A persistent, multi-player dungeon crawler/world exploration game accessed via M
   - Other players currently in the room
   - NPCs (Non-Player Characters)
   - Environmental details and modifications
+
+### Dynamic World Scaling
+- **Adaptive room generation**: Number of rooms scales based on active player count (using moving average)
+  - Prevents overcrowding while maintaining social interaction
+  - Example: 100 active players might generate 20-30 rooms to balance exploration and encounters
+- **Multiple spawn points**: New players distributed across several starting locations
+- **DDOS protection**: Uses moving average to prevent empty room spam from rapid connections
+- **Social density optimization**: Aims for "Goldilocks zone" - not too crowded, not too empty
+- **Room generation prompt**: Will need sophisticated prompt for creating coherent, interconnected rooms that fit the world's lore
+  - Rooms should feel unique but connected to existing geography
+  - Maintain consistent themes and atmosphere
+  - Create natural pathways and interesting exploration opportunities
 
 ### Persistence & Consequences
 **Every action permanently affects the world state:**

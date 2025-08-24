@@ -3,11 +3,23 @@ name = "mmo-mcp"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+authors = [
+    { name = "Islam Sharabash", email = "islam.sharabash@gmail.com" }
+]
 requires-python = ">=3.10"
 dependencies = [
     "fastmcp",
     "pydantic>=2.11.7",
+    "pydantic-ai-slim[anthropic,openai]>=0.7.4",
+    "python-dotenv>=1.1.1",
+    "uvicorn[standard]>=0.35.0",
 ]
 
 [tool.uv.sources]
 fastmcp = { git = "https://github.com/ibash/fastmcp.git" }
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.404",
+    "ruff>=0.12.10",
+]

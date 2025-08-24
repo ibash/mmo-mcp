@@ -4,6 +4,26 @@
 
 This document outlines the simplest possible implementation to demonstrate core concepts.
 
+## Player Types
+
+Players can be:
+- **Human-controlled**: A human user with an AI agent acting on their behalf (default mode)
+- **Autonomous AI**: Fully autonomous AI agents playing independently (use `&autonomous=1` parameter)
+
+### Connection Parameters
+- `player_id`: Required unique identifier for the player
+- `autonomous`: Optional parameter, set to `1` for autonomous AI mode
+
+Examples:
+- Human player: `http://localhost:8000/mcp?player_id=alice`
+- Autonomous AI: `http://localhost:8000/mcp?player_id=ai_explorer&autonomous=1`
+
+### Prompt Differences
+- **Human mode**: Prompts ask the AI to consult with the human for decisions like character name/description
+- **Autonomous mode**: Prompts encourage the AI to make creative decisions independently
+
+Both types interact with the world through the same MCP interface, ensuring equal gameplay capabilities.
+
 ## World Structure
 
 ### 4-Room Grid
@@ -20,8 +40,13 @@ This document outlines the simplest possible implementation to demonstrate core 
 ## Core MCP Tools
 
 ### 1. `create_character`
-- **Input**: character name, optional description
+- **Input**: character name, detailed description
 - **Function**: Creates a new character for first-time players
+- **Description notes**: 
+  - Can be very long and detailed
+  - Should include appearance, clothing, notable characteristics
+  - Will be LLM-summarized when other players see them
+  - Example: "A tall figure in a worn traveling cloak, with piercing green eyes and a scar across the left cheek. Carries an ornate staff with glowing runes. Leather boots show signs of many miles traveled."
 - **Returns**: Character creation confirmation
 
 ### 2. `look`
@@ -30,7 +55,7 @@ This document outlines the simplest possible implementation to demonstrate core 
 - **Returns**: 
   - Room name and description
   - List of items/objects in the room
-  - List of other players present
+  - List of other players present (with LLM-summarized descriptions)
   - Available exits (north, south, east, west)
 
 ### 3. `move`
@@ -82,8 +107,12 @@ This document outlines the simplest possible implementation to demonstrate core 
 ## Authentication System
 
 ### Simple Token-Based Auth
-- Each player gets a unique token/ID (could be in URL: `http://server:8000?player_id=abc123`)
+- Each player gets a unique token/ID in URL parameters
+- Connection formats:
+  - Human player: `http://server:8000/mcp?player_id=abc123`
+  - Autonomous AI: `http://server:8000/mcp?player_id=ai_abc&autonomous=1`
 - Server maintains mapping of token → character
+- Server uses `autonomous` parameter to customize prompts
 - For POC: Can hardcode a few test tokens
 
 ## New Player Flow
@@ -117,13 +146,18 @@ This document outlines the simplest possible implementation to demonstrate core 
 ## Persistence
 
 ### Minimal State Storage
-- Save to `world_state.json` file
+- **Quick prototype option**: Pickle files for periodic checkpoints
+  - Simple serialization of entire World object
+  - Save snapshots every few minutes or after significant events
+  - Easy rollback to previous states for testing
+- **Alternative**: JSON file for human-readable state
 - Store:
   - Room states (items in each room)
   - Player characters and their locations
   - Player inventories
 - Auto-save after each action
 - Load state on server start
+- **Note**: Production would use PostgreSQL or similar database, but pickle files work well for rapid prototyping
 
 ## Multi-Player Visibility
 
@@ -137,7 +171,7 @@ This document outlines the simplest possible implementation to demonstrate core 
 ## Technical Implementation Notes
 
 ### Data Models Needed
-1. `Character` - name, current_room, inventory
+1. `Player` - id, name, description, current_room, inventory
 2. `Room` - id, name, description, items, connections
 3. `Item` - name, description, location (room_id or character_id)
 4. `World` - rooms, characters, global state
@@ -163,6 +197,20 @@ The POC is successful if:
 6. Basic chat works within rooms
 
 ## Future Enhancements (Not in POC)
+
+### Dynamic World Scaling
+- **Auto-scaling rooms**: Expand from 4 rooms based on active player count
+  - Use moving average window (e.g., 5-minute average) to track genuine activity
+  - Target ratio: ~3-5 players per room for optimal social density
+  - Protection against DDOS: Don't create rooms based on connection spikes
+- **Multiple spawn points**: Once scaled up, distribute new players across starting areas
+- **Room generation**: Will need sophisticated AI prompt for creating:
+  - Coherent, interconnected rooms that fit existing geography
+  - Consistent themes while maintaining variety
+  - Natural exploration paths and interesting landmarks
+  - Rooms that feel discovered, not generated
+
+### Other Enhancements
 - Time system
 - NPCs
 - Complex interactions
