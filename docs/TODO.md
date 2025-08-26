@@ -23,3 +23,29 @@
 - [ ] Implement conjure tool for creating items
 - [ ] Update look command to show items
 - [ ] Allow item interactions in do command
+
+## Item Trading & Economy
+
+- [ ] Update prompts to mention trading after implementing give/trade features
+
+- [ ] Implement `give` tool to transfer items between players
+- [ ] Implement `trade` system for mutual item exchanges
+- [ ] Add item value/rarity system
+- [ ] Create marketplace/bazaar room type
+- [ ] Implement market stalls or vendor system
+- [ ] Add currency system (gold, coins, credits, etc.)
+- [ ] Allow players to set up shops or trading posts
+
+## Notifications
+
+**Implementation Note:** Will need to use MCP resources and resource change notifications to push updates to connected clients.
+
+- [ ] Set up MCP resource for player state/room state
+- [ ] Implement MCP resource change notifications
+- [ ] When another player enters/exits the room the user should be notified
+- [ ] When significant events happen in the room a player is in, the player
+      should be notified (but not for small / hard to notice events)
+- [ ] When big observable events (e.g. an explosion happen in adjacent room the player
+      should be notified)
+- [ ] When a chat message is received or "say" message is received, the player
+      is notified

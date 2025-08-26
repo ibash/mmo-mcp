@@ -96,8 +96,73 @@ async def do(ctx: Context, input: DoInput) -> str:
         return str(e)
 
 
+class PickupInput(BaseModel):
+    item_name: str = Field(description="Name or partial name of the item to pick up")
+
+
+def pickup(ctx: Context, input: PickupInput) -> str:
+    """Pick up an item from the current room."""
+
+    player_id = ctx.get_state("player_id")
+
+    try:
+        return world.pickup_item(player_id, input.item_name)
+    except GameError as e:
+        return str(e)
+
+
+class DropInput(BaseModel):
+    item_name: str = Field(description="Name or partial name of the item to drop")
+
+
+def drop(ctx: Context, input: DropInput) -> str:
+    """Drop an item from your inventory."""
+
+    player_id = ctx.get_state("player_id")
+
+    try:
+        return world.drop_item(player_id, input.item_name)
+    except GameError as e:
+        return str(e)
+
+
+def inventory(ctx: Context) -> str:
+    """Check what you're carrying."""
+
+    player_id = ctx.get_state("player_id")
+
+    try:
+        return world.get_inventory(player_id)
+    except GameError as e:
+        return str(e)
+
+
+class ConjureInput(BaseModel):
+    name: str = Field(
+        description="Name of the item to create (e.g., 'wooden staff', 'glowing orb')"
+    )
+    description: str = Field(
+        description="Detailed description of the item's appearance and properties"
+    )
+
+
+def conjure(ctx: Context, input: ConjureInput) -> str:
+    """Create a new item in the world."""
+
+    player_id = ctx.get_state("player_id")
+
+    try:
+        return world.conjure_item(player_id, input.name, input.description)
+    except GameError as e:
+        return str(e)
+
+
 def register(mcp: FastMCP):
     mcp.tool(look)
     mcp.tool(create_character)
     mcp.tool(move)
     mcp.tool(do)
+    mcp.tool(pickup)
+    mcp.tool(drop)
+    mcp.tool(inventory)
+    mcp.tool(conjure)

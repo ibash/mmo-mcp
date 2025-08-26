@@ -1,13 +1,17 @@
 from pydantic import BaseModel
 from .room import Room
 from .player import Player
+from .item import Item
 from .errors import GameError
 from .effects_agent import get_action_effects
+import uuid
+import re
 
 
 class World(BaseModel):
     rooms: dict[str, Room] = {}  # room_id -> Room
     players: dict[str, Player] = {}  # player_id -> Player
+    items: dict[str, Item] = {}  # item_id -> Item
 
     def add_player(self, player: Player, room_id: str) -> None:
         """Add a player to the world and place them in a specific room."""
@@ -60,13 +64,14 @@ class World(BaseModel):
                     response += f"{player_desc}\n"
             response += "\n"
 
-        # List items in the room (placeholder for now)
-        # TODO: Implement items
-        # if current_room.items:
-        #     response += "**Items here:**\n"
-        #     for item in current_room.items:
-        #         response += f"- {item}\n"
-        #     response += "\n"
+        # List items in the room
+        if current_room.items:
+            response += "**Items here:**\n"
+            for item_id in current_room.items:
+                item = self.items.get(item_id)
+                if item:
+                    response += f"- {item.describe()}\n"
+            response += "\n"
 
         # Show available exits and adjacent rooms
         if current_room.connections:
@@ -128,6 +133,13 @@ class World(BaseModel):
                 if other:
                     other_players[other_id] = other.name
 
+        # Build items context
+        room_items = {}
+        for item_id in current_room.items:
+            item = self.items.get(item_id)
+            if item:
+                room_items[item_id] = item.name
+
         # Get effects from the AI agent
         try:
             action_effects = await get_action_effects(
@@ -137,6 +149,7 @@ class World(BaseModel):
                 room_id=current_room.id,
                 room_description=current_room.describe(),
                 other_players=other_players,
+                room_items=room_items,
             )
 
             # Apply the effects
@@ -147,7 +160,8 @@ class World(BaseModel):
                     effect.target_type == "player" and effect.target_id in self.players
                 ):
                     self.players[effect.target_id].effects.append(effect.effect)
-                # TODO: Handle items when we implement them
+                elif effect.target_type == "item" and effect.target_id in self.items:
+                    self.items[effect.target_id].effects.append(effect.effect)
 
             return action_effects.response
 
@@ -156,3 +170,88 @@ class World(BaseModel):
             print(f"Effects agent failed: {e}")
             current_room.effects.append(f"Signs of recent activity: {action}.")
             return f"You {action}."
+
+    def pickup_item(self, player_id: str, item_name: str) -> str:
+        """Handle picking up an item from the current room."""
+        player, current_room = self.get_player_and_room(player_id)
+
+        # Find matching item in room
+        matching_item = self._find_item_by_name(current_room.items, item_name)
+
+        if not matching_item:
+            raise GameError(f"There's no '{item_name}' here to pick up.")
+
+        if not matching_item.portable:
+            raise GameError(f"The {matching_item.name} cannot be picked up.")
+
+        # Move item from room to player inventory
+        current_room.items.remove(matching_item.id)
+        player.inventory.append(matching_item.id)
+
+        return f"You pick up the {matching_item.name}."
+
+    def drop_item(self, player_id: str, item_name: str) -> str:
+        """Handle dropping an item from inventory."""
+        player, current_room = self.get_player_and_room(player_id)
+
+        # Find matching item in inventory
+        matching_item = self._find_item_by_name(player.inventory, item_name)
+
+        if not matching_item:
+            raise GameError(f"You don't have '{item_name}' in your inventory.")
+
+        # Move item from inventory to room
+        player.inventory.remove(matching_item.id)
+        current_room.items.append(matching_item.id)
+
+        return f"You drop the {matching_item.name}."
+
+    def get_inventory(self, player_id: str) -> str:
+        """Get formatted inventory listing for a player."""
+        if player_id not in self.players:
+            raise GameError("You need to create a character first!")
+
+        player = self.players[player_id]
+
+        if not player.inventory:
+            return "You're not carrying anything."
+
+        response = "**Your inventory:**\n"
+        for item_id in player.inventory:
+            item = self.items.get(item_id)
+            if item:
+                response += f"- {item.describe()}\n"
+
+        return response
+
+    def conjure_item(self, player_id: str, name: str, description: str) -> str:
+        """Create a new item in the world."""
+        player, current_room = self.get_player_and_room(player_id)
+
+        # Generate unique item ID - replace non-alphanumeric chars with underscore
+        safe_name = re.sub(r"[^a-zA-Z0-9]+", "_", name.lower()).strip("_")
+        item_id = f"{safe_name}_{uuid.uuid4().hex[:8]}"
+
+        # Create the item
+        new_item = Item(
+            id=item_id,
+            name=name,
+            description=description,
+            # Most conjured items should be portable by default
+            # TODO(ibash) set this intelligently
+            portable=True,
+        )
+
+        # Add to world and current room
+        self.items[item_id] = new_item
+        current_room.items.append(item_id)
+
+        return f"You conjure {name} into existence. {description}"
+
+    def _find_item_by_name(self, item_ids: list[str], partial_name: str) -> Item | None:
+        """Find an item by partial name match in a list of item IDs."""
+        for item_id in item_ids:
+            item = self.items.get(item_id)
+            if item and partial_name.lower() in item.name.lower():
+                return item
+        return None

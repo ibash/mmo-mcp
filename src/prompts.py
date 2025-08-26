@@ -277,8 +277,154 @@ Let the human know their action couldn't be performed. Suggest:
 - Checking their surroundings first with 'look'"""
 
 
+# TODO: Update this prompt to mention trading once give/trade tools are implemented
+def pickup(ctx: Context, item_name: str) -> str:
+    """Pick up an item from the current room."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    try:
+        result = world.pickup_item(player_id, item_name)
+
+        if autonomous:
+            return f"""{result}
+
+You now have this item in your inventory. Consider:
+- Using it in creative ways with 'do'
+- Dropping it in strategic locations"""
+        else:
+            return f"""{result}
+
+Tell the human player they've successfully picked up the item.
+It's now in their inventory and they can:
+- Drop it elsewhere
+- Use it with the 'do' command
+- Check their inventory to see all carried items"""
+
+    except GameError as e:
+        if autonomous:
+            return f"""{str(e)}
+
+Try looking around to see what items are available."""
+        else:
+            return f"""{str(e)}
+
+Let the human know they couldn't pick up that item. Suggest they:
+- Look around to see available items
+- Check if they typed the name correctly"""
+
+
+def drop(ctx: Context, item_name: str) -> str:
+    """Drop an item from your inventory."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    try:
+        result = world.drop_item(player_id, item_name)
+
+        if autonomous:
+            return f"""{result}
+
+The item is now in this room for others to find. Consider:
+- The strategic value of leaving items in certain locations
+- Creating item caches or gifts for other players
+- How this changes the room's character"""
+        else:
+            return f"""{result}
+
+Tell the human they've dropped the item here.
+Other players will be able to see and pick it up.
+The item remains in this room permanently unless someone takes it."""
+
+    except GameError as e:
+        if autonomous:
+            return f"""{str(e)}
+
+Check your inventory to see what you're carrying."""
+        else:
+            return f"""{str(e)}
+
+Let the human know they don't have that item. Suggest checking their inventory."""
+
+
+# TODO: Update this prompt to mention trading once give/trade tools are implemented
+def inventory(ctx: Context) -> str:
+    """Check what you're carrying."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    try:
+        result = world.get_inventory(player_id)
+
+        if autonomous:
+            if "not carrying anything" in result:
+                return f"""{result}
+
+Your inventory is empty. Consider:
+- Looking for items in rooms
+- Conjuring new items to carry"""
+            else:
+                return f"""{result}
+
+These are your current possessions. Think about:
+- Which items might be useful here
+- Where strategic placement might help others"""
+        else:
+            return f"""{result}
+
+**For the human player:**
+Show them their inventory and explain they can:
+- Drop items to leave them in rooms
+- Pick up items they find while exploring
+- Use items in creative ways with the 'do' command"""
+
+    except GameError as e:
+        return str(e)
+
+
+def conjure(ctx: Context, name: str, description: str) -> str:
+    """Create a new item in the world."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    try:
+        result = world.conjure_item(player_id, name, description)
+
+        if autonomous:
+            return f"""{result}
+
+You've added a permanent object to the world! Consider:
+- How this item might be used by others
+- Whether to leave it here or carry it elsewhere
+- What other items might complement this one"""
+        else:
+            return f"""{result}
+
+**For the human player:**
+Explain that they've created a permanent item that:
+- Will exist forever in the game world
+- Can be picked up, dropped, and used by anyone
+- Adds to the collaborative storytelling
+
+Suggest they might:
+- Pick it up to carry with them
+- Leave it for others to discover
+- Create more items to build up the world"""
+
+    except GameError as e:
+        return str(e)
+
+
 def register(mcp: FastMCP):
     mcp.prompt(play)
     mcp.prompt(look)
     mcp.prompt(move)
     mcp.prompt(do)
+    mcp.prompt(pickup)
+    mcp.prompt(drop)
+    mcp.prompt(inventory)
+    mcp.prompt(conjure)
