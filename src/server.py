@@ -19,7 +19,7 @@ Connect your AI agent to play as either:
 Every action has lasting consequences in this living world. Create objects, modify rooms, 
 interact with other players, and leave your mark on the dungeon.
 
-Use the 'play' prompt to get started and create your character.""",
+First use 'whoami' to check if you have a character. If not, use the 'play' prompt to get started and create your character.""",
 )
 mcp.add_middleware(AuthMiddleware())
 

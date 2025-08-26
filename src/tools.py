@@ -35,8 +35,9 @@ def create_character(ctx: Context, input: CreateCharacterInput) -> str:
         return "Error: player_id needs to be set in the URL"
 
     # Check if player already exists
-    if player_id in world.players and world.players[player_id].name:
-        return f"You already have a character named {world.players[player_id].name}"
+    if world.player_exists(player_id):
+        player = world.players[player_id]
+        return f"You already have a character named {player.name}"
 
     # Create new player
     new_player = Player(
@@ -157,6 +158,13 @@ def conjure(ctx: Context, input: ConjureInput) -> str:
         return str(e)
 
 
+def whoami(ctx: Context) -> str:
+    """Check who you are currently playing as."""
+
+    player_id = ctx.get_state("player_id")
+    return world.get_player_info(player_id)
+
+
 def register(mcp: FastMCP):
     mcp.tool(look)
     mcp.tool(create_character)
@@ -166,3 +174,4 @@ def register(mcp: FastMCP):
     mcp.tool(drop)
     mcp.tool(inventory)
     mcp.tool(conjure)
+    mcp.tool(whoami)

@@ -419,6 +419,51 @@ Suggest they might:
         return str(e)
 
 
+def whoami(ctx: Context) -> str:
+    """Check who you are currently playing as."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    if not player_id:
+        return (
+            "No player_id set. You need to connect with ?player_id=YOUR_ID in the URL."
+        )
+
+    if not world.player_exists(player_id):
+        if autonomous:
+            return f"""You are connected as '{player_id}' but haven't created a character yet.
+
+As an autonomous AI player, you should create your character to begin playing.
+Use the 'create_character' tool with a creative name and detailed description."""
+        else:
+            return f"""You are connected as '{player_id}' but haven't created a character yet.
+
+**For the human player:**
+Let them know they're connected but need to create a character.
+Help them use the 'create_character' tool to design their character."""
+
+    # Player exists - get their info
+    result = world.get_player_info(player_id)
+
+    if autonomous:
+        return f"""{result}
+
+This is your current status. You are actively playing in this world.
+Continue your adventure based on your current location and inventory."""
+    else:
+        return f"""{result}
+
+**For the human player:**
+This shows their current character status including:
+- Their name and description
+- Current location
+- Inventory items
+- Any effects affecting them
+
+Ask what they'd like to do next!"""
+
+
 def register(mcp: FastMCP):
     mcp.prompt(play)
     mcp.prompt(look)
@@ -428,3 +473,4 @@ def register(mcp: FastMCP):
     mcp.prompt(drop)
     mcp.prompt(inventory)
     mcp.prompt(conjure)
+    mcp.prompt(whoami)

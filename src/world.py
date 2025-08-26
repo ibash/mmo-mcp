@@ -56,12 +56,7 @@ class World(BaseModel):
             for pid in other_players:
                 other = self.players.get(pid)
                 if other:
-                    # Show full description
-                    player_desc = f"- {other.name}: {other.description}"
-                    if other.effects:
-                        effects_text = " ".join(other.effects)
-                        player_desc += f" {effects_text}"
-                    response += f"{player_desc}\n"
+                    response += f"- {other.describe_for_others()}\n"
             response += "\n"
 
         # List items in the room
@@ -247,6 +242,21 @@ class World(BaseModel):
         current_room.items.append(item_id)
 
         return f"You conjure {name} into existence. {description}"
+
+    def player_exists(self, player_id: str) -> bool:
+        """Check if a player with this ID exists."""
+        return player_id in self.players if player_id else False
+
+    def get_player_info(self, player_id: str) -> str:
+        """Get information about the current player."""
+        if not player_id:
+            return "No player_id set. You need to connect with ?player_id=YOUR_ID in the URL."
+
+        if not self.player_exists(player_id):
+            return f"You are connected as '{player_id}' but haven't created a character yet. Use the 'play' prompt to get started!"
+
+        player = self.players[player_id]
+        return player.describe_self(self)
 
     def _find_item_by_name(self, item_ids: list[str], partial_name: str) -> Item | None:
         """Find an item by partial name match in a list of item IDs."""
