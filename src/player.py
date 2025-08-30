@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+# Admin player IDs - hardcoded list
+ADMINS = ["ibash"]
+
 
 # A player is a character in the game
 class Player(BaseModel):
@@ -44,3 +47,7 @@ class Player(BaseModel):
             effects_text = " ".join(self.effects)
             desc += f" {effects_text}"
         return desc
+
+    def is_admin(self) -> bool:
+        """Check if this player has admin privileges."""
+        return self.id in ADMINS

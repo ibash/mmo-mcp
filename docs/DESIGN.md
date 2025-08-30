@@ -132,6 +132,13 @@ Room descriptions dynamically update to reflect these changes, and the room main
 - Resource scarcity creating natural conflict?
 - Environmental dangers (traps, hazards)?
 
+**TODO: Design and implement fighting system**
+- Need to decide on combat mechanics (turn-based, real-time, dice-based?)
+- Health/damage model
+- Weapons and armor system
+- PvP vs PvE considerations
+- Death and respawn mechanics
+
 ### Death & Failure
 - Permadeath or respawn system?
 - Item loss on death?

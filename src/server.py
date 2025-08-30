@@ -19,6 +19,7 @@ from . import tools  # noqa: E402
 from .auth import AuthMiddleware  # noqa: E402
 from .game_world import world  # noqa: E402
 from .persist import Persist  # noqa: E402
+from .admin import Admin  # noqa: E402
 
 mcp = FastMCP(
     name="Dungeon Crawler MCP",
@@ -37,8 +38,14 @@ mcp.add_middleware(AuthMiddleware())
 
 app = mcp.http_app()
 
+# Register game tools and prompts
 tools.register(mcp)
 prompts.register(mcp)
+
+# Register admin tools
+admin = Admin(world)
+admin.register(mcp)
+
 
 # Simple background thread for periodic saves
 
@@ -67,7 +74,6 @@ def save_on_exit():
 
 
 atexit.register(save_on_exit)
-
 
 if __name__ == "__main__":
     mcp.run(

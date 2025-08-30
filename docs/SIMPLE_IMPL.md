@@ -143,6 +143,15 @@ Both types interact with the world through the same MCP interface, ensuring equa
    ```
 5. **Start Location**: All players start in Room 1 (Forest Clearing)
 
+## TODO: Fighting System
+
+### Combat Mechanics
+- Need to implement a basic fighting system
+- Players should be able to fight each other or NPCs
+- Consider simple health/damage model to start
+- Weapons and armor from conjured items
+- Death/respawn mechanics
+
 ## Persistence
 
 ### Minimal State Storage
