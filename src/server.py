@@ -1,4 +1,8 @@
+import atexit
 import logging
+import threading
+import time
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,10 +14,11 @@ logging.basicConfig(
 
 from fastmcp import FastMCP  # noqa: E402
 
-from .auth import AuthMiddleware  # noqa: E402
-from . import tools  # noqa: E402
 from . import prompts  # noqa: E402
-from .game_world import start_periodic_save  # noqa: E402
+from . import tools  # noqa: E402
+from .auth import AuthMiddleware  # noqa: E402
+from .game_world import world  # noqa: E402
+from .persist import Persist  # noqa: E402
 
 mcp = FastMCP(
     name="Dungeon Crawler MCP",
@@ -35,15 +40,39 @@ app = mcp.http_app()
 tools.register(mcp)
 prompts.register(mcp)
 
+# Simple background thread for periodic saves
 
-# Start periodic save on startup
-@app.on_event("startup")
-def startup_event():
-    """Start background tasks when the server starts."""
-    # Start periodic save (every 5 minutes by default)
-    start_periodic_save()
-    logging.info("Started periodic world save task")
+
+def periodic_save():
+    """Save world every 5 minutes."""
+    persist = Persist()
+    while True:
+        time.sleep(300)  # 5 minutes
+        persist.save_sync(world)
+        logging.info("Periodic save completed")
+
+
+# Start background thread as daemon so it exits with main program
+thread = threading.Thread(target=periodic_save, daemon=True)
+thread.start()
+logging.info("Started periodic save thread")
+
+
+# Save on exit
+def save_on_exit():
+    """Save world when program exits."""
+    logging.info("Saving world on exit...")
+    Persist().save_sync(world)
+    logging.info("World saved")
+
+
+atexit.register(save_on_exit)
 
 
 if __name__ == "__main__":
-    mcp.run(transport="http", host="127.0.0.1", port=8000, path="/mcp")
+    mcp.run(
+        transport="http",
+        host="127.0.0.1",
+        port=8000,
+        path="/mcp",
+    )
