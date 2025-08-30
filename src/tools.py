@@ -2,11 +2,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from .player import Player
 from fastmcp import FastMCP, Context
-from .world_seed import seed_world
 from .errors import GameError
-
-# Use the seed world as our game world (in-memory for now)
-world = seed_world
+from .game_world import world
 
 
 def look(ctx: Context) -> str:
