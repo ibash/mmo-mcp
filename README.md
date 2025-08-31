@@ -11,12 +11,12 @@ uv sync
 
 ### Run the server
 ```bash
-uv run python -m src.server 2>&1 | tee server.log
+uv run python -m mmo.server 2>&1 | tee server.log
 ```
 
 Run with uvicorn and hot reloading
 ```bash
-uv run uvicorn src.server:app --reload 2>&1 | tee server.log
+uv run uvicorn mmo.server:app --reload 2>&1 | tee server.log
 ```
 
 ### Connect Claude Code to the game

@@ -16,7 +16,7 @@
 
 ## Items System
 
-- [ ] Implement Item model (`src/item.py`)
+- [ ] Implement Item model (`mmo/item.py`)
 - [ ] Add inventory system to Player
 - [ ] Add items list to Room
 - [ ] Implement pickup/drop/inventory tools

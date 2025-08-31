@@ -788,13 +788,13 @@ wheels = [
 [[package]]
 name = "mmo-mcp"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
     { name = "pydantic-ai-slim", extra = ["anthropic", "openai"] },
-    { name = "python-dotenv" },
+    { name = "pydantic-settings" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -810,7 +810,7 @@ requires-dist = [
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "pydantic-ai-slim", extras = ["anthropic", "openai"], specifier = ">=0.7.4" },
-    { name = "python-dotenv", specifier = ">=1.1.1" },
+    { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.35.0" },
 ]
 

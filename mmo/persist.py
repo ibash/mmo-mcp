@@ -6,11 +6,9 @@ import os
 import psycopg
 
 from .world import World
+from .settings import settings
 
 logger = logging.getLogger(__name__)
-
-# Persistence mode: "disk" for local JSON files, "postgres" for PostgreSQL
-PERSIST_MODE = os.environ.get("PERSIST_MODE", "disk").lower()
 
 
 class Persist:
@@ -27,52 +25,52 @@ class Persist:
         """Synchronously save world state using the configured backend."""
         filename = self._get_filename(world_id)
 
-        if PERSIST_MODE == "postgres":
+        if settings.persist_mode == "postgres":
             self.save_to_postgres_sync(world, world_id)
-        elif PERSIST_MODE == "disk":
+        elif settings.persist_mode == "disk":
             self.save_to_disk(world, filename)
         else:
             raise ValueError(
-                f"Unknown PERSIST_MODE: {PERSIST_MODE}. Use 'disk' or 'postgres'"
+                f"Unknown PERSIST_MODE: {settings.persist_mode}. Use 'disk' or 'postgres'"
             )
 
     def load_sync(self, world_id: int = 1) -> World:
         """Synchronously load world state using the configured backend."""
         filename = self._get_filename(world_id)
 
-        if PERSIST_MODE == "postgres":
+        if settings.persist_mode == "postgres":
             return self.load_from_postgres_sync(world_id)
-        elif PERSIST_MODE == "disk":
+        elif settings.persist_mode == "disk":
             return self.load_from_disk(filename)
         else:
             raise ValueError(
-                f"Unknown PERSIST_MODE: {PERSIST_MODE}. Use 'disk' or 'postgres'"
+                f"Unknown PERSIST_MODE: {settings.persist_mode}. Use 'disk' or 'postgres'"
             )
 
     async def save(self, world: World, world_id: int = 1) -> None:
         """Save world state using the configured backend (disk or postgres)."""
         filename = self._get_filename(world_id)
 
-        if PERSIST_MODE == "postgres":
+        if settings.persist_mode == "postgres":
             await self.save_to_postgres(world, world_id)
-        elif PERSIST_MODE == "disk":
+        elif settings.persist_mode == "disk":
             self.save_to_disk(world, filename)
         else:
             raise ValueError(
-                f"Unknown PERSIST_MODE: {PERSIST_MODE}. Use 'disk' or 'postgres'"
+                f"Unknown PERSIST_MODE: {settings.persist_mode}. Use 'disk' or 'postgres'"
             )
 
     async def load(self, world_id: int = 1) -> World:
         """Load world state using the configured backend (disk or postgres)."""
         filename = self._get_filename(world_id)
 
-        if PERSIST_MODE == "postgres":
+        if settings.persist_mode == "postgres":
             return await self.load_from_postgres(world_id)
-        elif PERSIST_MODE == "disk":
+        elif settings.persist_mode == "disk":
             return self.load_from_disk(filename)
         else:
             raise ValueError(
-                f"Unknown PERSIST_MODE: {PERSIST_MODE}. Use 'disk' or 'postgres'"
+                f"Unknown PERSIST_MODE: {settings.persist_mode}. Use 'disk' or 'postgres'"
             )
 
     def save_to_disk(self, world: World, filename: str = "world.json") -> None:
@@ -144,8 +142,7 @@ class Persist:
 
             # row is a tuple: (payload, updated_at)
             payload, updated_at = row
-            world_data = json.loads(payload)
-            world = World(**world_data)
+            world = World(**payload)
 
             logger.info(
                 f"World loaded from PostgreSQL (id={world_id}, updated={updated_at})"

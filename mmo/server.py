@@ -3,22 +3,18 @@ import logging
 import threading
 import time
 
-from dotenv import load_dotenv
+from fastmcp import FastMCP
 
-load_dotenv()
+from . import prompts, tools
+from .auth import AuthMiddleware
+from .game_world import world
+from .persist import Persist
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
-from fastmcp import FastMCP  # noqa: E402
-
-from . import prompts  # noqa: E402
-from . import tools  # noqa: E402
-from .auth import AuthMiddleware  # noqa: E402
-from .game_world import world  # noqa: E402
-from .persist import Persist  # noqa: E402
 
 mcp = FastMCP(
     name="Dungeon Crawler MCP",
@@ -69,10 +65,14 @@ def save_on_exit():
 atexit.register(save_on_exit)
 
 
-if __name__ == "__main__":
+def main():
     mcp.run(
         transport="http",
         host="127.0.0.1",
         port=8000,
         path="/mcp",
     )
+
+
+if __name__ == "__main__":
+    main()

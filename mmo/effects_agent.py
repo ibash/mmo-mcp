@@ -1,7 +1,11 @@
-from pydantic import BaseModel, Field
 from typing import List, Literal
+from pydantic_ai.models.anthropic import AnthropicModel
+from pydantic_ai.providers.anthropic import AnthropicProvider
 
+from pydantic import BaseModel, Field
 from pydantic_ai import Agent
+
+from .settings import settings
 
 
 class Effect(BaseModel):
@@ -48,7 +52,10 @@ Examples:
 """
 
 effects_agent = Agent(
-    "anthropic:claude-3-7-sonnet-latest",
+    AnthropicModel(
+        "anthropic:claude-3-7-sonnet-latest",
+        provider=AnthropicProvider(api_key=settings.anthropic_api_key),
+    ),
     system_prompt=SYSTEM_PROMPT,
     output_type=ActionEffects,
 )

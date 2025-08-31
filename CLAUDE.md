@@ -35,7 +35,7 @@ Key principle: Asserts are for "this should be impossible" situations. They help
 ## Error Handling
 
 ### GameError
-Use `GameError` (from `src/errors.py`) for any error message that should be shown to players/AI agents.
+Use `GameError` (from `mmo/errors.py`) for any error message that should be shown to players/AI agents.
 
 **When to use GameError:**
 - Player hasn't created a character yet
@@ -69,32 +69,32 @@ This project uses `uv` as the package manager (an extremely fast Python package 
 uv sync
 
 # Run the MCP server
-uv run python -m src.server
+uv run python -m mmo.server
 
 # Run with hot reloading (development)
-uv run uvicorn src.server:app --reload
+uv run uvicorn mmo.server:app --reload
 ```
 
 ## Architecture
 
 ### Core Structure
 
-- **`src/server.py`**: FastMCP server setup and registration. Runs on HTTP transport (port 8000)
-- **`src/prompts.py`**: MCP prompts that provide context-aware instructions
+- **`mmo/server.py`**: FastMCP server setup and registration. Runs on HTTP transport (port 8000)
+- **`mmo/prompts.py`**: MCP prompts that provide context-aware instructions
   - `play`: Main entry point, handles registration and game introduction
   - `look`: Provides AI/human-specific guidance for exploring
-- **`src/tools.py`**: MCP tools for game actions
+- **`mmo/tools.py`**: MCP tools for game actions
   - `look`: Returns raw room description
   - `create_character`: Character creation with name and description
-- **`src/world.py`**: World state management
+- **`mmo/world.py`**: World state management
   - Manages rooms and players
   - `add_player()`: Adds player to world and room
   - `get_player_and_room()`: Validates and returns player/room
   - `look()`: Generates room descriptions with players and exits
-- **`src/room.py`**: Room model with connections and players
-- **`src/player.py`**: Player model with inventory and location
-- **`src/world_seed.py`**: Creates the initial 4-room world for development
-- **`src/auth.py`**: Middleware for player authentication via URL parameters
+- **`mmo/room.py`**: Room model with connections and players
+- **`mmo/player.py`**: Player model with inventory and location
+- **`mmo/world_seed.py`**: Creates the initial 4-room world for development
+- **`mmo/auth.py`**: Middleware for player authentication via URL parameters
 
 ### Game Flow
 
