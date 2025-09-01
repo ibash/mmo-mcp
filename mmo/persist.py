@@ -100,13 +100,10 @@ class Persist:
 
     async def save_to_postgres(self, world: World, world_id: int) -> None:
         """Save the world state to PostgreSQL."""
-        database_url = os.environ.get("DATABASE_URL")
-        if not database_url:
-            raise ValueError("DATABASE_URL environment variable not set")
-
-        async with await psycopg.AsyncConnection.connect(database_url) as conn:
-            world_json = json.dumps(world.model_dump())
-
+        assert settings.database_url is not None
+        async with await psycopg.AsyncConnection.connect(
+            str(settings.database_url)
+        ) as conn:
             # Upsert - insert or update if exists
             await conn.execute(
                 """
@@ -124,12 +121,9 @@ class Persist:
 
     async def load_from_postgres(self, world_id: int) -> World:
         """Load world state from PostgreSQL."""
-        database_url = os.environ.get("DATABASE_URL")
-        if not database_url:
-            raise ValueError("DATABASE_URL environment variable not set")
-
+        assert settings.database_url is not None
         async with (
-            await psycopg.AsyncConnection.connect(database_url) as conn,
+            await psycopg.AsyncConnection.connect(str(settings.database_url)) as conn,
             conn.cursor() as cur,
         ):
             await cur.execute(
@@ -151,13 +145,8 @@ class Persist:
 
     def save_to_postgres_sync(self, world: World, world_id: int) -> None:
         """Synchronously save the world state to PostgreSQL."""
-        database_url = os.environ.get("DATABASE_URL")
-        if not database_url:
-            raise ValueError("DATABASE_URL environment variable not set")
-
-        with psycopg.connect(database_url) as conn:
-            world_json = json.dumps(world.model_dump())
-
+        assert settings.database_url is not None
+        with psycopg.connect(str(settings.database_url)) as conn:
             # Upsert - insert or update if exists
             conn.execute(
                 """
@@ -175,11 +164,8 @@ class Persist:
 
     def load_from_postgres_sync(self, world_id: int) -> World:
         """Synchronously load world state from PostgreSQL."""
-        database_url = os.environ.get("DATABASE_URL")
-        if not database_url:
-            raise ValueError("DATABASE_URL environment variable not set")
-
-        with psycopg.connect(database_url) as conn, conn.cursor() as cur:
+        assert settings.database_url is not None
+        with psycopg.connect(str(settings.database_url)) as conn, conn.cursor() as cur:
             cur.execute(
                 "SELECT payload, updated_at FROM worlds WHERE id = %s", (world_id,)
             )
