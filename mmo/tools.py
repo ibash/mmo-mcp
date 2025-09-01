@@ -2,6 +2,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from .player import Player
 from fastmcp import FastMCP, Context
+from fastmcp.server.dependencies import get_http_request
 from .errors import GameError
 from .game_world import world
 
@@ -36,12 +37,19 @@ def create_character(ctx: Context, input: CreateCharacterInput) -> str:
         player = world.players[player_id]
         return f"You already have a character named {player.name}"
 
-    # Create new player
+    # Get password from request for new player
+    request = get_http_request()
+    password = request.query_params.get("password")
+    if not password:
+        return "Error: password is required for authentication"
+
+    # Create new player with hashed password
     new_player = Player(
         id=player_id,
         name=input.name,
         description=input.description,
         current_room="room_1",  # Will be set by add_player
+        password_hash=Player.hash_password(password),
     )
 
     # Add player to world and starting room
