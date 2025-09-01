@@ -1,9 +1,13 @@
-from pydantic import BaseModel
+from datetime import datetime
+from pydantic import BaseModel, Field
 
 
 # A player is a character in the game
 class Player(BaseModel):
     id: str  # Unique player ID (could be token/auth ID)
+    created_at: datetime = Field(
+        default_factory=datetime.now
+    )  # When player was first created
     name: str
     description: str  # Detailed appearance, clothing, notable items, characteristics
     current_room: str  # Room ID where player is located
@@ -11,6 +15,13 @@ class Player(BaseModel):
     effects: list[
         str
     ] = []  # Effects on the player ("Your clothes are wet", "You're covered in mud")
+    last_action_at: datetime = Field(
+        default_factory=datetime.now
+    )  # When player last did something
+
+    def touch(self) -> None:
+        """Update last_action_at to current time."""
+        self.last_action_at = datetime.now()
 
     def describe_self(self, world) -> str:
         """Describe yourself - includes private information like inventory."""

@@ -85,6 +85,7 @@ class World(BaseModel):
     def move_player(self, player_id: str, direction: str) -> str:
         """Move a player to an adjacent room."""
         player, current_room = self.get_player_and_room(player_id)
+        player.touch()
 
         # Normalize direction to lowercase
         direction = direction.lower()
@@ -119,6 +120,7 @@ class World(BaseModel):
     async def do_action(self, player_id: str, action: str) -> str:
         """Perform an arbitrary action that may affect the world."""
         player, current_room = self.get_player_and_room(player_id)
+        player.touch()
 
         # Build context for the AI
         other_players = {}
@@ -169,6 +171,7 @@ class World(BaseModel):
     def pickup_item(self, player_id: str, item_name: str) -> str:
         """Handle picking up an item from the current room."""
         player, current_room = self.get_player_and_room(player_id)
+        player.touch()
 
         # Find matching item in room
         matching_item = self._find_item_by_name(current_room.items, item_name)
@@ -188,6 +191,7 @@ class World(BaseModel):
     def drop_item(self, player_id: str, item_name: str) -> str:
         """Handle dropping an item from inventory."""
         player, current_room = self.get_player_and_room(player_id)
+        player.touch()
 
         # Find matching item in inventory
         matching_item = self._find_item_by_name(player.inventory, item_name)
@@ -222,6 +226,7 @@ class World(BaseModel):
     def conjure_item(self, player_id: str, name: str, description: str) -> str:
         """Create a new item in the world."""
         player, current_room = self.get_player_and_room(player_id)
+        player.touch()
 
         # Generate unique item ID - replace non-alphanumeric chars with underscore
         safe_name = re.sub(r"[^a-zA-Z0-9]+", "_", name.lower()).strip("_")
