@@ -45,7 +45,7 @@ def periodic_save():
     while True:
         time.sleep(300)  # 5 minutes
         persist.save_sync(world)
-        logging.info("Periodic save completed")
+        logging.debug("Periodic save completed")
 
 
 # Start background thread as daemon so it exits with main program

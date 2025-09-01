@@ -1,9 +1,9 @@
 import asyncio
-import json
 import logging
 import os
 
 import psycopg
+from psycopg.types.json import Jsonb
 
 from .world import World
 from .settings import settings
@@ -78,11 +78,11 @@ class Persist:
         # Write to a temp file first, then rename for atomicity
         temp_filename = f"{filename}.tmp"
         with open(temp_filename, "w") as f:
-            json.dump(world.model_dump(), f, indent=2)
+            f.write(world.model_dump_json(indent=2))
 
         # Atomic rename
         os.replace(temp_filename, filename)
-        logger.info(f"World saved to {filename}")
+        logger.debug(f"World saved to {filename}")
 
     def load_from_disk(self, filename: str = "world.json") -> World:
         """Load world state from a JSON file."""
@@ -90,10 +90,10 @@ class Persist:
             raise FileNotFoundError(f"Save file {filename} not found")
 
         with open(filename, "r") as f:
-            world_data = json.load(f)
+            json_str = f.read()
 
-        # Reconstruct the World from the saved data
-        world = World(**world_data)
+        # Reconstruct the World from the saved data using Pydantic's JSON parser
+        world = World.model_validate_json(json_str)
 
         logger.info(f"World loaded from {filename}")
         return world
@@ -114,10 +114,10 @@ class Persist:
                     payload = EXCLUDED.payload,
                     updated_at = NOW()
             """,
-                (world_id, world_json),
+                (world_id, Jsonb(world.model_dump(mode="json"))),
             )
 
-            logger.info(f"World saved to PostgreSQL (id={world_id})")
+            logger.debug(f"World saved to PostgreSQL (id={world_id})")
 
     async def load_from_postgres(self, world_id: int) -> World:
         """Load world state from PostgreSQL."""
@@ -136,7 +136,8 @@ class Persist:
 
             # row is a tuple: (payload, updated_at)
             payload, updated_at = row
-            world = World(**payload)
+            # payload is a dict from PostgreSQL's JSONB type
+            world = World.model_validate(payload)
 
             logger.info(
                 f"World loaded from PostgreSQL (id={world_id}, updated={updated_at})"
@@ -157,10 +158,10 @@ class Persist:
                     payload = EXCLUDED.payload,
                     updated_at = NOW()
             """,
-                (world_id, world_json),
+                (world_id, Jsonb(world.model_dump(mode="json"))),
             )
 
-            logger.info(f"World saved to PostgreSQL sync (id={world_id})")
+            logger.debug(f"World saved to PostgreSQL sync (id={world_id})")
 
     def load_from_postgres_sync(self, world_id: int) -> World:
         """Synchronously load world state from PostgreSQL."""
@@ -176,7 +177,8 @@ class Persist:
 
             # row is a tuple: (payload, updated_at)
             payload, updated_at = row
-            world = World(**payload)
+            # payload is a dict from PostgreSQL's JSONB type
+            world = World.model_validate(payload)
 
             logger.info(
                 f"World loaded from PostgreSQL sync (id={world_id}, updated={updated_at})"
