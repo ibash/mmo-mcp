@@ -5,7 +5,7 @@ import logging
 
 from .persist import Persist
 from .world import World
-from .world_seed import create_seed_world
+from .world_seed_expanded import create_expanded_seed_world
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def load_world() -> World:
         # No saved world found, create from seed
         logger.info(f"No saved world found: {e}")
         logger.info("Creating new world from seed...")
-        world = create_seed_world()
+        world = create_expanded_seed_world()  # Use the expanded world!
 
         # Save the initial world
         persist.save_sync(world, world_id)

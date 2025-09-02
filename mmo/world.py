@@ -87,18 +87,20 @@ class World(BaseModel):
         player, current_room = self.get_player_and_room(player_id)
         player.touch()
 
-        # Normalize direction to lowercase
-        direction = direction.lower()
-
-        # Check if direction exists
+        # Check if direction exists (case-sensitive for complex directions)
         if direction not in current_room.connections:
-            available = list(current_room.connections.keys())
-            if available:
-                raise GameError(
-                    f"You can't go {direction}. Available directions: {', '.join(available)}"
-                )
+            # Try lowercase for simple cardinal directions
+            direction_lower = direction.lower()
+            if direction_lower in current_room.connections:
+                direction = direction_lower
             else:
-                raise GameError("There are no exits from this room.")
+                available = list(current_room.connections.keys())
+                if available:
+                    raise GameError(
+                        f"You can't go '{direction}'. Available exits: {', '.join(available)}"
+                    )
+                else:
+                    raise GameError("There are no exits from this room.")
 
         # Get the destination room
         new_room_id = current_room.connections[direction]

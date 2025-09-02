@@ -1,4 +1,3 @@
-from typing import Literal
 from pydantic import BaseModel, Field
 from .player import Player
 from fastmcp import FastMCP, Context
@@ -48,12 +47,12 @@ def create_character(ctx: Context, input: CreateCharacterInput) -> str:
         id=player_id,
         name=input.name,
         description=input.description,
-        current_room="room_1",  # Will be set by add_player
+        current_room="nexus_clearing",  # Will be set by add_player
         password_hash=Player.hash_password(password),
     )
 
     # Add player to world and starting room
-    world.add_player(new_player, "room_1")
+    world.add_player(new_player, "nexus_clearing")
     starting_room = world.rooms[new_player.current_room]
 
     return f"""Character created successfully!
@@ -68,8 +67,8 @@ Type 'look' to examine your surroundings or 'move [direction]' to start explorin
 
 
 class MoveInput(BaseModel):
-    direction: Literal["north", "south", "east", "west"] = Field(
-        description="The direction to move"
+    direction: str = Field(
+        description="The direction to move (e.g., 'north', 'through the office door', 'up the stairs')"
     )
 
 

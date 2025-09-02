@@ -7,6 +7,49 @@
   - EXCEPT for `GameError` exceptions - these are meant to be user-facing and should be shown to players
   - Need to ensure GameErrors are properly propagated through fastmcp's error handling
 
+## High Priority for Launch
+
+### Add "Go Home" / Teleport Command
+**Problem**: With 41+ rooms, players might get lost and unable to find others, especially during low-population times.
+
+**Solution**: Add a command to return to the Nexus Clearing (central hub).
+
+**Implementation Options**:
+1. **Simple "home" command** - Instantly teleports player to nexus_clearing
+   - Pros: Easy to implement, always works
+   - Cons: Might be abused to escape danger (if we add that later)
+   
+2. **"Recall stone" item** - Item that teleports you home when used
+   - Pros: More immersive, can be limited (consumable or cooldown)
+   - Cons: New players might not have one
+   
+3. **"Find others" command** - Teleports to room with most players
+   - Pros: Directly solves the "can't find anyone" problem
+   - Cons: Could break immersion, might overwhelm popular rooms
+
+**Recommended Approach**:
+- Start with simple "home" command for launch
+- Command: `home` or `return` 
+- Message: "You focus on the memory of the Nexus Clearing and find yourself back among the impossible doors."
+- Consider cooldown (5 minutes?) to prevent abuse
+- Always works from anywhere
+
+**Code Location**:
+- Add to `mmo/tools.py` as new tool
+- No input needed, just uses player context
+- Update player location to "nexus_clearing"
+
+This ensures players can always:
+- Return to a known meeting spot
+- Escape if they get lost in confusing areas  
+- Regroup with others at the central hub
+- Start fresh if they're stuck
+
+Consider adding flavor text that makes it feel intentional:
+- "The strange doors of the Nexus call to you..."
+- "Reality shifts and you're back where you started..."
+- "You wake up in the clearing, unsure if you ever left..."
+
 ## Prompt Adjustments
 
 - [ ] **Reduce fantasy bias in prompts**: Update prompts to tone down how much "fantasy" AIs inject when interacting with the world. Currently AIs are over-indexing on "dungeon crawler" to mean only dungeons/fantasy characters (wizards, knights, etc.). We want more of an open world exploration game - magic exists but the constant medieval fantasy tropes are becoming cliche. Consider:
