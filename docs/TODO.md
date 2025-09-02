@@ -86,6 +86,33 @@ Consider adding flavor text that makes it feel intentional:
 - [ ] Add currency system (gold, coins, credits, etc.)
 - [ ] Allow players to set up shops or trading posts
 
+## Dynamic World Generation
+
+### Dynamic Room Generation
+- [ ] **Automatic room creation based on player actions**: When players discover new areas (e.g., crawl through a vent, find a hidden door), automatically generate new rooms
+  - Trigger room generation on specific actions (explore, search, use items)
+  - Create rooms contextually based on the action (vent → maintenance tunnel, door → new chamber)
+  - Connect new rooms to existing world graph
+  - Consider room templates or procedural generation
+  - Maintain world coherence and prevent infinite expansion
+
+### Dynamic NPC/Player Generation  
+- [ ] **Automatic NPC/player creation from player actions**: When players conjure/summon/create entities (e.g., conjure a family, summon a creature), generate them as new players/NPCs
+  - Allow players to create NPCs through roleplay actions
+  - Generated NPCs should have appropriate names, descriptions, behaviors
+  - NPCs could be controlled by AI or become available for other players to embody
+  - Consider limits to prevent spam/abuse
+  - NPCs should persist and have their own agency
+
+## Character Creation Improvements
+
+- [ ] **Allow non-human character types**: Update character creation prompt to support diverse character types
+  - Remove human-centric assumptions from prompts
+  - Allow animals, robots, aliens, abstract entities, etc.
+  - Adjust character description guidance to be species-agnostic
+  - Ensure game mechanics work for non-humanoid forms
+  - Update room descriptions to handle diverse character types gracefully
+
 ## Notifications
 
 **Implementation Note:** Will need to use MCP resources and resource change notifications to push updates to connected clients.
