@@ -1,0 +1,68 @@
+{
+  "rooms": {
+    "room_1": {
+      "id": "room_1",
+      "name": "Forest Clearing",
+      "description": "A peaceful clearing in the forest. Sunlight filters through the canopy above.",
+      "connections": {
+        "east": "room_2",
+        "south": "room_3"
+      },
+      "items": [],
+      "players": [
+        "gorn"
+      ],
+      "effects": []
+    },
+    "room_2": {
+      "id": "room_2",
+      "name": "Cave Entrance",
+      "description": "A dark cave entrance looms before you. Cool air flows from within.",
+      "connections": {
+        "west": "room_1",
+        "south": "room_4"
+      },
+      "items": [],
+      "players": [],
+      "effects": []
+    },
+    "room_3": {
+      "id": "room_3",
+      "name": "River Bank",
+      "description": "A gentle river flows by. You can hear the water babbling over smooth stones.",
+      "connections": {
+        "north": "room_1",
+        "east": "room_4"
+      },
+      "items": [],
+      "players": [],
+      "effects": []
+    },
+    "room_4": {
+      "id": "room_4",
+      "name": "Old Ruins",
+      "description": "Ancient stone ruins covered in moss. There's an air of mystery here.",
+      "connections": {
+        "north": "room_2",
+        "west": "room_3"
+      },
+      "items": [],
+      "players": [],
+      "effects": []
+    }
+  },
+  "players": {
+    "gorn": {
+      "id": "gorn",
+      "created_at": "2025-09-01T22:14:05.176172",
+      "name": "Norman Wicksworth",
+      "description": "A brass whale oil lamp manufactured in New Bedford, Massachusetts in 1847. The lamp has a tarnished brass body with a small dent on the base from falling off a shelf in 1983. A faded price tag reading '$3.50 - Hardwick & Sons Marine Supplies' is still tied to the handle with yellowed twine. Currently contains exactly 2.3 fluid ounces of whale oil that sloshes gently with movement. The wick is precisely trimmed to 1/4 inch and burns with a steady, dim yellow flame that casts warm shadows. Norman was being carried by an antique dealer named Margie who set him down 'just for a second' to check her phone in what she thought was her basement, but she never came back. Despite everything, the flame continues to burn reliably, providing a small circle of comforting light in the darkness.",
+      "current_room": "room_1",
+      "inventory": [],
+      "password_hash": "$2b$06$ggW5IY8FlBDs6sLSplxhre6fgIdzpq3yi7Nix8Moz8Gp7w7fC4d5S",
+      "effects": [],
+      "last_action_at": "2025-09-01T22:14:05.176186"
+    }
+  },
+  "items": {}
+}

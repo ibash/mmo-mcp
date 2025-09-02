@@ -43,7 +43,8 @@ def periodic_save():
     """Save world every 5 minutes."""
     persist = Persist()
     while True:
-        time.sleep(300)  # 5 minutes
+        # time.sleep(300)  # 5 minutes
+        time.sleep(10)  # 5 minutes
         persist.save_sync(world)
         logging.debug("Periodic save completed")
 
