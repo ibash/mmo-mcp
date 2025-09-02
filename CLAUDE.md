@@ -119,3 +119,43 @@ uv run uvicorn mmo.server:app --reload
 - World state is in-memory (will add persistence later)
 - The MCP server runs on HTTP transport at 127.0.0.1:8000/mcp
 - Prompts and tools are registered via their respective `register()` functions
+
+## Prompt Engineering Process
+
+When improving prompts or LLM interactions:
+
+### Core Principles
+
+1. **LLMs must write to "think"**: LLMs don't have internal mental processes. Any complex reasoning must be externalized into written steps. "Think about X then do Y" doesn't work - instead use "Write out X, then based on what you wrote, do Y".
+
+2. **Test empirically, not intuitively**: Create test files comparing multiple approaches in parallel. Use LLM judges with harsh scoring criteria (30-50 normal, 70+ exceptional). Counter-intuitive approaches often win (e.g., 5 concepts beat 20).
+
+### Testing Process
+
+1. Create a test file with multiple approaches
+2. Run them in parallel with consistent evaluation 
+3. Use LLM judges with specific scoring criteria
+4. Test counter-intuitive approaches (less might be more)
+5. Focus on process/method, not content/examples
+6. Make all steps explicit and observable
+7. Include anti-patterns (what NOT to do)
+8. Iterate based on empirical results
+
+### Key Techniques
+
+- **Constraint breeds creativity**: Specific requirements ("EXACTLY 5, COMPLETELY different") beat vague guidance
+- **Process over examples**: Teaching the method beats providing content
+- **Anti-patterns matter**: Explicitly state what to avoid (e.g., "NOT Shadow, Storm, Raven")
+- **Observable steps**: Make each step visible (list concepts, show reasoning, list avoided patterns)
+- **Specific beats vague**: "$27.43 in pocket" beats "some money"
+
+### Example: Character Creation Optimization
+
+Our character creation went from 35/100 (baseline) to 70/100 (optimized) by:
+- Reducing from 20 to 5 concepts (forced diversity)
+- Making LLM write out all steps explicitly
+- Adding specific mundane details
+- Listing clichés to avoid
+- Using harsh LLM scoring
+
+Remember: Small wording changes can have huge impacts. "Mentally generate" vs "Write out" was the difference between 48/100 and 65/100 scores.
