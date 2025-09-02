@@ -1,6 +1,7 @@
 from fastmcp import FastMCP, Context
 from .errors import GameError
 from .game_world import world
+from .character_creation_guide import AUTONOMOUS_GUIDE, HUMAN_GUIDE
 
 
 def play(ctx: Context) -> str:
@@ -75,7 +76,6 @@ Ask the human what they'd like to do next, and help them explore this world wher
 
     else:
         # Player needs to register
-        # TODO: Add a character creation tool to help AI/humans create rich character descriptions
         if autonomous:
             # Registration for autonomous AI
             return """Welcome to the Dungeon Crawler!
@@ -83,19 +83,14 @@ Ask the human what they'd like to do next, and help them explore this world wher
 This is a persistent multiplayer text-based adventure where you explore interconnected rooms, 
 interact with objects and other players, and shape the world through your actions.
 
-As an autonomous AI player, you need to create your character:
+As an autonomous AI player, you need to create your character.
 
-1. Choose a creative and unique character name
-2. Write a detailed description including:
-   - Physical appearance and distinctive features
-   - Clothing and equipment
-   - Personality traits and quirks
-   - Brief backstory or motivation for adventuring
+IMPORTANT: First use the 'get_character_creation_guide' tool to get the full character creation process.
+This guide will walk you through a proven 5-step method to create unique, memorable characters
+that avoid generic fantasy clichés.
 
-Be creative! Your character will interact with both human players and other AIs.
-Your description is what others will see when they encounter you.
-
-Use the create_character tool with your chosen name and description to begin your adventure!"""
+After getting the guide, follow it exactly (showing your work for each step),
+then use 'create_character' with your final result."""
         else:
             # Registration for human player
             return """Welcome to the Dungeon Crawler!
@@ -103,21 +98,14 @@ Use the create_character tool with your chosen name and description to begin you
 This is a persistent multiplayer text-based adventure where you explore interconnected rooms, 
 interact with objects and other players, and shape the world through your actions.
 
-You're helping a human player join the game. Please:
+You're helping a human player create their character.
 
-1. Ask them for their character's name
-2. Ask for basic details about their character (appearance, clothing, personality)
-3. Take their input and elaborate it into a rich, detailed description that includes:
-   - Vivid physical details and distinctive features
-   - Clothing described with textures, colors, and wear
-   - Equipment or notable items with character
-   - Personality quirks or mannerisms
-   - Hints of backstory or motivation
+IMPORTANT: First use the 'get_character_creation_guide' tool to get your guidance for helping them.
+This will show you how to transform their ideas - whether generic or specific - into
+something truly memorable and unique.
 
-Your role: Transform their simple ideas into an immersive character description that will captivate other players.
-For example, if they say "a warrior with a sword", you might elaborate into "a battle-scarred warrior with weathered leather armor, carrying an ancient blade etched with mysterious runes..."
-
-Once you've crafted the enhanced description, confirm it with them, then use create_character to begin!"""
+After getting the guide, ask the human what kind of character they'd like to play,
+then follow the guide to help them refine it into something special."""
 
 
 def look(ctx: Context) -> str:
@@ -431,14 +419,18 @@ def whoami(ctx: Context) -> str:
         if autonomous:
             return f"""You are connected as '{player_id}' but haven't created a character yet.
 
-As an autonomous AI player, you should create your character to begin playing.
-Use the 'create_character' tool with a creative name and detailed description."""
+As an autonomous AI player, use the 'get_character_creation_guide' tool to get the full
+character creation process. This will give you the proven 5-step method to create
+unique, memorable characters.
+
+After getting the guide, follow it exactly (showing your work), then use 'create_character'."""
         else:
             return f"""You are connected as '{player_id}' but haven't created a character yet.
 
 **For the human player:**
 Let them know they're connected but need to create a character.
-Help them use the 'create_character' tool to design their character."""
+Use the 'get_character_creation_guide' tool to get your guidance for helping them.
+Then ask what kind of character they'd like to play and help refine it into something memorable."""
 
     # Player exists - get their info
     result = world.get_player_info(player_id)
@@ -461,8 +453,26 @@ This shows their current character status including:
 Ask what they'd like to do next!"""
 
 
+def get_character_creation_guide(ctx: Context) -> str:
+    """Get the character creation guide to create unique, memorable characters."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    # Check if player already exists
+    if world.player_exists(player_id):
+        player = world.players[player_id]
+        return f"You already have a character named {player.name}. You're all set!"
+
+    if autonomous:
+        return AUTONOMOUS_GUIDE
+    else:
+        return HUMAN_GUIDE
+
+
 def register(mcp: FastMCP):
     mcp.prompt(play)
+    mcp.prompt(get_character_creation_guide)
     mcp.prompt(look)
     mcp.prompt(move)
     mcp.prompt(do)
