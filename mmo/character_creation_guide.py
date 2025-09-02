@@ -29,8 +29,8 @@ STEP 4: Add specific mundane details that fit THIS character:
 STEP 5: Expand into a full character using Steps 3-4:
 - Give them a normal first and last name
 - Include the specific details from Step 4
-- Make them feel like someone you'd meet at a bus stop
-- Explain why they're here (wrong place/time, NOT destiny)
+- Make them feel like a real person from the modern world
+- Explain why they're here (be creative - lost, curious, chasing something, accident, etc. - NOT destiny)
 
 Execute ALL steps, showing your work, then use create_character with the final result!"""
 
@@ -46,7 +46,7 @@ When the human provides their character concept, help them refine it using this 
 
 2. GUIDE them through these improvements:
    - Replace fantasy names with normal first and last names
-   - Add specific mundane details (exact amounts, brands, times)
+   - Add specific mundane details (brands, locations, daily routines)
    - Give them real-world problems, not epic quests
    - Make them someone who could exist in our world
 
