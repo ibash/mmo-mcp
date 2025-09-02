@@ -53,7 +53,7 @@ Examples:
 
 effects_agent = Agent(
     AnthropicModel(
-        "anthropic:claude-3-7-sonnet-latest",
+        "claude-3-7-sonnet-latest",
         provider=AnthropicProvider(api_key=settings.anthropic_api_key),
     ),
     system_prompt=SYSTEM_PROMPT,
