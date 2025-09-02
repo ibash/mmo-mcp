@@ -21,10 +21,10 @@ STEP 3: List 3 cliché patterns to AVOID:
 - Vague descriptors (mysterious, ancient, haunted, ethereal, otherworldly)
 - Standard motivations (revenge, destiny, dark past, chosen one, prophecy)
 
-STEP 4: Add 3 extremely specific mundane details:
-- Exact amount of money in their pocket ($X.XX)
+STEP 4: Add specific mundane details that fit THIS character:
 - Specific brand/model of something they own
-- Precise time/date that matters to them
+- A concrete detail about their appearance or clothing
+- A specific worry, problem, or thing they need to do
 
 STEP 5: Expand into a full character using Steps 3-4:
 - Give them a normal first and last name
