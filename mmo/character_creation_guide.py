@@ -51,7 +51,7 @@ When the human provides their character concept, help them refine it using this 
    - Make them someone who could exist in our world
 
 3. SUGGEST specific details like:
-   - What's in their pockets (be exact: "$13.47 and a grocery receipt")
+   - What's in their pockets (be creative: "half-eaten sandwich", "borrowed pen", "allergy medication")
    - What they were doing before arriving here
    - A specific item they own (brand and model)
    - Why they're here (accident, not destiny)
