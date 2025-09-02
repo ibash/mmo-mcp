@@ -31,14 +31,14 @@ class CLI:
             for room_id, room in world.rooms.items():
                 print(f"  {room_id}: {room.name}")
                 print(f"    Description: {room.description}")
-                if room.connections:
-                    connections_str = ", ".join(
+                if room.exits:
+                    exits_str = ", ".join(
                         [
-                            f"{direction} -> {target_room}"
-                            for direction, target_room in room.connections.items()
+                            f"{exit.keyword} -> {exit.target_room_id}"
+                            for exit in room.exits
                         ]
                     )
-                    print(f"    Connections: {connections_str}")
+                    print(f"    Exits: {exits_str}")
                 if room.players:
                     print(f"    Players: {', '.join(room.players)}")
                 if room.items:
@@ -112,11 +112,13 @@ class CLI:
             # Add edges with direction labels
             seen_connections = set()
             for room_id, room in world.rooms.items():
-                for direction, target in room.connections.items():
+                for exit in room.exits:
                     # Avoid duplicate edges in undirected graph
-                    edge = tuple(sorted([room_id, target]))
+                    edge = tuple(sorted([room_id, exit.target_room_id]))
                     if edge not in seen_connections:
-                        print(f"    {room_id} ---|{direction}| {target}")
+                        print(
+                            f"    {room_id} ---|{exit.keyword}| {exit.target_room_id}"
+                        )
                         seen_connections.add(edge)
 
             print("```")
@@ -153,8 +155,10 @@ class CLI:
 
             # Add edges with direction labels
             for room_id, room in world.rooms.items():
-                for direction, target in room.connections.items():
-                    print(f'    {room_id} -> {target} [label="{direction}"];')
+                for exit in room.exits:
+                    print(
+                        f'    {room_id} -> {exit.target_room_id} [label="{exit.keyword}"];'
+                    )
 
             print("}")
             print("\n# To render: dot -Tpng -o world_map.png <filename>.dot")

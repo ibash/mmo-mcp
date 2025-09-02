@@ -69,14 +69,16 @@ class World(BaseModel):
             response += "\n"
 
         # Show available exits and adjacent rooms
-        if current_room.connections:
+        if current_room.exits:
             response += "**Exits:**\n"
-            for direction, room_id in current_room.connections.items():
-                adjacent_room = self.rooms.get(room_id)
+            for exit in current_room.exits:
+                adjacent_room = self.rooms.get(exit.target_room_id)
                 if adjacent_room:
                     # Brief preview of adjacent room
                     preview = adjacent_room.description.split(".")[0]  # First sentence
-                    response += f"- {direction.capitalize()}: {adjacent_room.name} ({preview}...)\n"
+                    response += (
+                        f"- {exit.keyword}: {adjacent_room.name} ({preview}...)\n"
+                    )
         else:
             response += "There are no visible exits.\n"
 
@@ -87,23 +89,26 @@ class World(BaseModel):
         player, current_room = self.get_player_and_room(player_id)
         player.touch()
 
-        # Check if direction exists (case-sensitive for complex directions)
-        if direction not in current_room.connections:
-            # Try lowercase for simple cardinal directions
-            direction_lower = direction.lower()
-            if direction_lower in current_room.connections:
-                direction = direction_lower
+        # Find the exit matching the direction keyword
+        matching_exit = None
+        direction_lower = direction.lower()
+
+        for exit in current_room.exits:
+            if exit.keyword.lower() == direction_lower:
+                matching_exit = exit
+                break
+
+        if not matching_exit:
+            available = [exit.keyword for exit in current_room.exits]
+            if available:
+                raise GameError(
+                    f"You can't go '{direction}'. Available exits: {', '.join(available)}"
+                )
             else:
-                available = list(current_room.connections.keys())
-                if available:
-                    raise GameError(
-                        f"You can't go '{direction}'. Available exits: {', '.join(available)}"
-                    )
-                else:
-                    raise GameError("There are no exits from this room.")
+                raise GameError("There are no exits from this room.")
 
         # Get the destination room
-        new_room_id = current_room.connections[direction]
+        new_room_id = matching_exit.target_room_id
         if new_room_id not in self.rooms:
             # This shouldn't happen with valid data, but check anyway
             # TODO(ibash) send an error to an error tracker
@@ -116,8 +121,11 @@ class World(BaseModel):
         player.current_room = new_room_id
         new_room.players.append(player_id)
 
+        # Use the exit's movement phrase
+        movement_text = matching_exit.movement_phrase
+
         # Return description of new room
-        return f"You move {direction} to {new_room.name}.\n\n{self.look(player_id)}"
+        return f"You {movement_text} and arrive at {new_room.name}.\n\n{self.look(player_id)}"
 
     async def do_action(self, player_id: str, action: str) -> str:
         """Perform an arbitrary action that may affect the world."""

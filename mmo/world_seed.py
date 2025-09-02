@@ -1,5 +1,6 @@
 from .world import World
 from .room import Room
+from .exit import Exit
 
 
 def create_seed_world() -> World:
@@ -12,28 +13,40 @@ def create_seed_world() -> World:
         id="room_1",
         name="Forest Clearing",
         description="A peaceful clearing in the forest. Sunlight filters through the canopy above.",
-        connections={"east": "room_2", "south": "room_3"},
+        exits=[
+            Exit(keyword="east", target_room_id="room_2", movement_phrase="go east"),
+            Exit(keyword="south", target_room_id="room_3", movement_phrase="go south"),
+        ],
     )
 
     room_2 = Room(
         id="room_2",
         name="Cave Entrance",
         description="A dark cave entrance looms before you. Cool air flows from within.",
-        connections={"west": "room_1", "south": "room_4"},
+        exits=[
+            Exit(keyword="west", target_room_id="room_1", movement_phrase="go west"),
+            Exit(keyword="south", target_room_id="room_4", movement_phrase="go south"),
+        ],
     )
 
     room_3 = Room(
         id="room_3",
         name="River Bank",
         description="A gentle river flows by. You can hear the water babbling over smooth stones.",
-        connections={"north": "room_1", "east": "room_4"},
+        exits=[
+            Exit(keyword="north", target_room_id="room_1", movement_phrase="go north"),
+            Exit(keyword="east", target_room_id="room_4", movement_phrase="go east"),
+        ],
     )
 
     room_4 = Room(
         id="room_4",
         name="Old Ruins",
         description="Ancient stone ruins covered in moss. There's an air of mystery here.",
-        connections={"north": "room_2", "west": "room_3"},
+        exits=[
+            Exit(keyword="north", target_room_id="room_2", movement_phrase="go north"),
+            Exit(keyword="west", target_room_id="room_3", movement_phrase="go west"),
+        ],
     )
 
     # Add rooms to world

@@ -1,11 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from .exit import Exit
 
 
 class Room(BaseModel):
     id: str
     name: str
     description: str
-    connections: dict[str, str] = {}  # {"north": "room_2", "east": "room_3"}
+    exits: list[Exit] = Field(default_factory=list)  # List of exits to other rooms
     items: list[str] = []  # List of item IDs
     players: list[str] = []  # List of player IDs currently in room
     effects: list[

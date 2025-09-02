@@ -1,5 +1,6 @@
 from .world import World
 from .room import Room
+from .exit import Exit
 
 
 def create_expanded_seed_world() -> World:
@@ -19,14 +20,38 @@ def create_expanded_seed_world() -> World:
             "office door marked 'Suite 200', a rusty subway entrance, a neon-lit arcade entrance, "
             "and an ornate museum door. None of them should exist here, yet they do."
         ),
-        connections={
-            "office": "office_lobby",
-            "subway": "subway_platform_1",
-            "arcade": "mall_arcade",
-            "museum": "museum_lobby",
-            "forest": "forest_grove",
-            "revolving": "cyber_street",
-        },
+        exits=[
+            Exit(
+                keyword="office",
+                target_room_id="office_lobby",
+                movement_phrase="enter the office door",
+            ),
+            Exit(
+                keyword="subway",
+                target_room_id="subway_platform_1",
+                movement_phrase="descend into the subway",
+            ),
+            Exit(
+                keyword="arcade",
+                target_room_id="mall_arcade",
+                movement_phrase="step into the neon arcade",
+            ),
+            Exit(
+                keyword="museum",
+                target_room_id="museum_lobby",
+                movement_phrase="enter the museum",
+            ),
+            Exit(
+                keyword="forest",
+                target_room_id="forest_grove",
+                movement_phrase="follow the forest path",
+            ),
+            Exit(
+                keyword="revolving",
+                target_room_id="cyber_street",
+                movement_phrase="push through the revolving door",
+            ),
+        ],
     )
 
     # ============================================
@@ -40,11 +65,23 @@ def create_expanded_seed_world() -> World:
             "posters line the walls. Elevator music plays softly. A forest clearing is "
             "visible through the glass doors."
         ),
-        connections={
-            "glass": "nexus_clearing",
-            "elevator": "office_floor_7",
-            "stairs": "office_basement",
-        },
+        exits=[
+            Exit(
+                keyword="glass",
+                target_room_id="nexus_clearing",
+                movement_phrase="pass through the glass doors",
+            ),
+            Exit(
+                keyword="elevator",
+                target_room_id="office_floor_7",
+                movement_phrase="take the elevator",
+            ),
+            Exit(
+                keyword="stairs",
+                target_room_id="office_basement",
+                movement_phrase="descend the stairs",
+            ),
+        ],
     )
 
     office_floor_7 = Room(
@@ -55,11 +92,23 @@ def create_expanded_seed_world() -> World:
             "Someone's printer is jammed. There's a birthday cake in the break room, but "
             "nobody knows whose birthday it is."
         ),
-        connections={
-            "elevator": "office_lobby",
-            "break": "office_break_room",
-            "fire": "office_roof",
-        },
+        exits=[
+            Exit(
+                keyword="elevator",
+                target_room_id="office_lobby",
+                movement_phrase="take the elevator down",
+            ),
+            Exit(
+                keyword="break",
+                target_room_id="office_break_room",
+                movement_phrase="head to the break room",
+            ),
+            Exit(
+                keyword="fire",
+                target_room_id="office_roof",
+                movement_phrase="take the fire escape up",
+            ),
+        ],
     )
 
     office_break_room = Room(
@@ -70,10 +119,18 @@ def create_expanded_seed_world() -> World:
             "eternally stale. Someone labeled their yogurt 'DO NOT STEAL' in the fridge. "
             "A window overlooks the parking lot."
         ),
-        connections={
-            "cubicles": "office_floor_7",
-            "window": "office_parking",  # Surprisingly, it opens
-        },
+        exits=[
+            Exit(
+                keyword="cubicles",
+                target_room_id="office_floor_7",
+                movement_phrase="return to the cubicles",
+            ),
+            Exit(
+                keyword="window",
+                target_room_id="office_parking",
+                movement_phrase="climb through the window",
+            ),
+        ],
     )
 
     office_basement = Room(
@@ -84,10 +141,18 @@ def create_expanded_seed_world() -> World:
             "cold from the AC. Multiple monitors show scrolling green text. A suspicious "
             "door marked 'Authorized Personnel Only' leads somewhere unexpected."
         ),
-        connections={
-            "up": "office_lobby",
-            "suspicious": "subway_tunnel",  # Secret connection!
-        },
+        exits=[
+            Exit(
+                keyword="up",
+                target_room_id="office_lobby",
+                movement_phrase="climb back up the stairs",
+            ),
+            Exit(
+                keyword="suspicious",
+                target_room_id="subway_tunnel",
+                movement_phrase="investigate the suspicious door",
+            ),
+        ],
     )
 
     office_roof = Room(
@@ -98,7 +163,18 @@ def create_expanded_seed_world() -> World:
             "abandoned. You can see other districts from here - a forest, neon lights, "
             "and what looks like... a beach?"
         ),
-        connections={"fire": "office_floor_7", "escape": "office_parking"},
+        exits=[
+            Exit(
+                keyword="fire",
+                target_room_id="office_floor_7",
+                movement_phrase="descend the fire escape",
+            ),
+            Exit(
+                keyword="escape",
+                target_room_id="office_parking",
+                movement_phrase="take the exterior fire escape down",
+            ),
+        ],
     )
 
     office_parking = Room(
@@ -109,12 +185,28 @@ def create_expanded_seed_world() -> World:
             "Most cars look identical. A shopping cart from the mall sits abandoned "
             "in a parking space."
         ),
-        connections={
-            "building": "office_lobby",
-            "window": "office_break_room",
-            "escape": "office_roof",
-            "hedge": "mall_loading",  # Another secret!
-        },
+        exits=[
+            Exit(
+                keyword="building",
+                target_room_id="office_lobby",
+                movement_phrase="enter the building",
+            ),
+            Exit(
+                keyword="window",
+                target_room_id="office_break_room",
+                movement_phrase="climb up through the window",
+            ),
+            Exit(
+                keyword="escape",
+                target_room_id="office_roof",
+                movement_phrase="climb the fire escape",
+            ),
+            Exit(
+                keyword="hedge",
+                target_room_id="mall_loading",
+                movement_phrase="squeeze through the hedge",
+            ),
+        ],
     )
 
     # ============================================
@@ -129,12 +221,28 @@ def create_expanded_seed_world() -> World:
             "shopping cart. Corporate arcology towers loom overhead, their residents never "
             "coming down. A revolving door stands bizarrely pristine among the decay."
         ),
-        connections={
-            "revolving": "nexus_clearing",
-            "ramen": "cyber_ramen",
-            "fire": "cyber_apartment",
-            "alley": "cyber_back_alley",
-        },
+        exits=[
+            Exit(
+                keyword="revolving",
+                target_room_id="nexus_clearing",
+                movement_phrase="push through the revolving door",
+            ),
+            Exit(
+                keyword="ramen",
+                target_room_id="cyber_ramen",
+                movement_phrase="duck into the ramen shop",
+            ),
+            Exit(
+                keyword="fire",
+                target_room_id="cyber_apartment",
+                movement_phrase="climb the fire escape",
+            ),
+            Exit(
+                keyword="alley",
+                target_room_id="cyber_back_alley",
+                movement_phrase="slip into the dark alley",
+            ),
+        ],
     )
 
     cyber_ramen = Room(
@@ -146,7 +254,18 @@ def create_expanded_seed_world() -> World:
             "in the back while salary men slurp synthetic noodles up front. The smell of "
             "antiseptic mixes with soy sauce."
         ),
-        connections={"street": "cyber_street", "kitchen": "cyber_back_alley"},
+        exits=[
+            Exit(
+                keyword="street",
+                target_room_id="cyber_street",
+                movement_phrase="return to the street",
+            ),
+            Exit(
+                keyword="kitchen",
+                target_room_id="cyber_back_alley",
+                movement_phrase="slip through the kitchen",
+            ),
+        ],
     )
 
     cyber_apartment = Room(
@@ -158,10 +277,18 @@ def create_expanded_seed_world() -> World:
             "are stacked like pizza boxes. Through the grimy window, you see a thousand "
             "identical units. Someone's screaming three coffins over."
         ),
-        connections={
-            "fire": "cyber_street",
-            "vent": "cyber_rooftop",  # Because why not
-        },
+        exits=[
+            Exit(
+                keyword="fire",
+                target_room_id="cyber_street",
+                movement_phrase="descend the fire escape",
+            ),
+            Exit(
+                keyword="vent",
+                target_room_id="cyber_rooftop",
+                movement_phrase="crawl through the vent",
+            ),
+        ],
     )
 
     cyber_back_alley = Room(
@@ -173,11 +300,23 @@ def create_expanded_seed_world() -> World:
             "of dead celebrities. The Triad runs protection; bodies of those who didn't pay "
             "hang from the data cables overhead."
         ),
-        connections={
-            "street": "cyber_street",
-            "kitchen": "cyber_ramen",
-            "dumpster": "subway_tunnel",  # Everything connects!
-        },
+        exits=[
+            Exit(
+                keyword="street",
+                target_room_id="cyber_street",
+                movement_phrase="return to the main street",
+            ),
+            Exit(
+                keyword="kitchen",
+                target_room_id="cyber_ramen",
+                movement_phrase="enter through the kitchen door",
+            ),
+            Exit(
+                keyword="dumpster",
+                target_room_id="subway_tunnel",
+                movement_phrase="squeeze behind the dumpster",
+            ),
+        ],
     )
 
     cyber_rooftop = Room(
@@ -189,10 +328,18 @@ def create_expanded_seed_world() -> World:
             "the water collectors. Below, the city burns; above, surveillance drones "
             "circle endlessly. Through the smog, impossibly, you glimpse trees."
         ),
-        connections={
-            "vent": "cyber_apartment",
-            "bridge": "museum_roof",  # Rooftop network!
-        },
+        exits=[
+            Exit(
+                keyword="vent",
+                target_room_id="cyber_apartment",
+                movement_phrase="drop back through the vent",
+            ),
+            Exit(
+                keyword="bridge",
+                target_room_id="museum_roof",
+                movement_phrase="cross the makeshift bridge",
+            ),
+        ],
     )
 
     # ============================================
@@ -206,11 +353,23 @@ def create_expanded_seed_world() -> World:
             "attract mode sounds in an endless loop. The carpet has that distinct "
             "arcade smell. Prize tickets litter the floor."
         ),
-        connections={
-            "forest": "nexus_clearing",
-            "mall": "mall_food_court",
-            "staff": "mall_backrooms",
-        },
+        exits=[
+            Exit(
+                keyword="forest",
+                target_room_id="nexus_clearing",
+                movement_phrase="exit to the forest",
+            ),
+            Exit(
+                keyword="mall",
+                target_room_id="mall_food_court",
+                movement_phrase="enter the mall proper",
+            ),
+            Exit(
+                keyword="staff",
+                target_room_id="mall_backrooms",
+                movement_phrase="slip through the staff door",
+            ),
+        ],
     )
 
     mall_food_court = Room(
@@ -221,11 +380,23 @@ def create_expanded_seed_world() -> World:
             "in the center still runs somehow. Muzak echoes eerily. One restaurant's "
             "sign still flickers: 'Pizza by the Slice'."
         ),
-        connections={
-            "arcade": "mall_arcade",
-            "up": "mall_upper",
-            "parking": "mall_loading",
-        },
+        exits=[
+            Exit(
+                keyword="arcade",
+                target_room_id="mall_arcade",
+                movement_phrase="return to the arcade",
+            ),
+            Exit(
+                keyword="up",
+                target_room_id="mall_upper",
+                movement_phrase="take the escalator up",
+            ),
+            Exit(
+                keyword="parking",
+                target_room_id="mall_loading",
+                movement_phrase="head to the loading dock",
+            ),
+        ],
     )
 
     mall_upper = Room(
@@ -236,11 +407,23 @@ def create_expanded_seed_world() -> World:
             "Mannequins in outdated fashion stand frozen in windows. A skylight "
             "shows the sky, though you're not sure which sky it is."
         ),
-        connections={
-            "down": "mall_food_court",
-            "store": "mall_store",
-            "skylight": "mall_roof",  # If you can reach it
-        },
+        exits=[
+            Exit(
+                keyword="down",
+                target_room_id="mall_food_court",
+                movement_phrase="take the escalator down",
+            ),
+            Exit(
+                keyword="store",
+                target_room_id="mall_store",
+                movement_phrase="enter the department store",
+            ),
+            Exit(
+                keyword="skylight",
+                target_room_id="mall_roof",
+                movement_phrase="climb through the skylight",
+            ),
+        ],
     )
 
     mall_store = Room(
@@ -251,7 +434,18 @@ def create_expanded_seed_world() -> World:
             "Soft jazz plays from hidden speakers. The perfume section is "
             "overwhelming even after all this time."
         ),
-        connections={"mall": "mall_upper", "service": "mall_backrooms"},
+        exits=[
+            Exit(
+                keyword="mall",
+                target_room_id="mall_upper",
+                movement_phrase="return to the mall",
+            ),
+            Exit(
+                keyword="service",
+                target_room_id="mall_backrooms",
+                movement_phrase="take the service elevator",
+            ),
+        ],
     )
 
     mall_backrooms = Room(
@@ -262,12 +456,28 @@ def create_expanded_seed_world() -> World:
             "merchandise gather dust. You hear the hum of ventilation but "
             "can't tell where it's coming from. Doors lead everywhere and nowhere."
         ),
-        connections={
-            "arcade": "mall_arcade",
-            "elevator": "mall_store",
-            "loading": "mall_loading",
-            "unmarked": "office_basement",  # Connected to office!
-        },
+        exits=[
+            Exit(
+                keyword="arcade",
+                target_room_id="mall_arcade",
+                movement_phrase="return to the arcade",
+            ),
+            Exit(
+                keyword="elevator",
+                target_room_id="mall_store",
+                movement_phrase="take the service elevator up",
+            ),
+            Exit(
+                keyword="loading",
+                target_room_id="mall_loading",
+                movement_phrase="go to the loading dock",
+            ),
+            Exit(
+                keyword="unmarked",
+                target_room_id="office_basement",
+                movement_phrase="open the unmarked door",
+            ),
+        ],
     )
 
     mall_loading = Room(
@@ -278,11 +488,23 @@ def create_expanded_seed_world() -> World:
             "Weeds grow through cracks in the concrete. A gap in the fence leads to "
             "what looks like a corporate parking lot."
         ),
-        connections={
-            "mall": "mall_food_court",
-            "backrooms": "mall_backrooms",
-            "fence": "office_parking",  # District crossing!
-        },
+        exits=[
+            Exit(
+                keyword="mall",
+                target_room_id="mall_food_court",
+                movement_phrase="enter the mall",
+            ),
+            Exit(
+                keyword="backrooms",
+                target_room_id="mall_backrooms",
+                movement_phrase="enter the backrooms",
+            ),
+            Exit(
+                keyword="fence",
+                target_room_id="office_parking",
+                movement_phrase="squeeze through the fence",
+            ),
+        ],
     )
 
     mall_roof = Room(
@@ -293,7 +515,13 @@ def create_expanded_seed_world() -> World:
             "You can see the forest clearing from here, with its impossible doors. "
             "Birds nest in the old neon signs."
         ),
-        connections={"skylight": "mall_upper"},
+        exits=[
+            Exit(
+                keyword="skylight",
+                target_room_id="mall_upper",
+                movement_phrase="drop back through the skylight",
+            ),
+        ],
     )
 
     # ============================================
@@ -307,11 +535,23 @@ def create_expanded_seed_world() -> World:
             "destinations that don't make sense. A train arrives and departs on "
             "its own schedule. The stairs lead up to... a forest?"
         ),
-        connections={
-            "up": "nexus_clearing",
-            "tunnel": "subway_tunnel",
-            "across": "subway_platform_2",
-        },
+        exits=[
+            Exit(
+                keyword="up",
+                target_room_id="nexus_clearing",
+                movement_phrase="climb the stairs up",
+            ),
+            Exit(
+                keyword="tunnel",
+                target_room_id="subway_tunnel",
+                movement_phrase="enter the dark tunnel",
+            ),
+            Exit(
+                keyword="across",
+                target_room_id="subway_platform_2",
+                movement_phrase="cross to the opposite platform",
+            ),
+        ],
     )
 
     subway_platform_2 = Room(
@@ -322,11 +562,23 @@ def create_expanded_seed_world() -> World:
             "from the 1950s still hang on the walls. You hear trains but never "
             "see them. A maintenance door is slightly ajar."
         ),
-        connections={
-            "across": "subway_platform_1",
-            "maintenance": "subway_control",
-            "dark": "subway_tunnel",
-        },
+        exits=[
+            Exit(
+                keyword="across",
+                target_room_id="subway_platform_1",
+                movement_phrase="cross back to the main platform",
+            ),
+            Exit(
+                keyword="maintenance",
+                target_room_id="subway_control",
+                movement_phrase="enter the maintenance door",
+            ),
+            Exit(
+                keyword="dark",
+                target_room_id="subway_tunnel",
+                movement_phrase="venture into the dark tunnel",
+            ),
+        ],
     )
 
     subway_tunnel = Room(
@@ -337,12 +589,28 @@ def create_expanded_seed_world() -> World:
             "You hear dripping water and distant train sounds. Multiple passages "
             "branch off, leading to unexpected places."
         ),
-        connections={
-            "platform": "subway_platform_1",
-            "ghost": "subway_platform_2",
-            "grate": "office_basement",  # To office!
-            "pipes": "cyber_back_alley",  # To cyberpunk!
-        },
+        exits=[
+            Exit(
+                keyword="platform",
+                target_room_id="subway_platform_1",
+                movement_phrase="return to the central platform",
+            ),
+            Exit(
+                keyword="ghost",
+                target_room_id="subway_platform_2",
+                movement_phrase="find the ghost platform",
+            ),
+            Exit(
+                keyword="grate",
+                target_room_id="office_basement",
+                movement_phrase="squeeze through the grate",
+            ),
+            Exit(
+                keyword="pipes",
+                target_room_id="cyber_back_alley",
+                movement_phrase="squeeze behind the pipes",
+            ),
+        ],
     )
 
     subway_control = Room(
@@ -353,7 +621,18 @@ def create_expanded_seed_world() -> World:
             "lights on the board are red, half green, but nothing seems to "
             "change when you flip switches. Coffee cups suggest someone was here recently."
         ),
-        connections={"platform": "subway_platform_2", "emergency": "subway_surface"},
+        exits=[
+            Exit(
+                keyword="platform",
+                target_room_id="subway_platform_2",
+                movement_phrase="return to the ghost platform",
+            ),
+            Exit(
+                keyword="emergency",
+                target_room_id="subway_surface",
+                movement_phrase="take the emergency exit",
+            ),
+        ],
     )
 
     subway_surface = Room(
@@ -364,11 +643,23 @@ def create_expanded_seed_world() -> World:
             "The entrance is covered in graffiti. Somehow, you can see both "
             "neon signs and office buildings from here."
         ),
-        connections={
-            "down": "subway_control",
-            "neon": "cyber_street",  # To cyberpunk!
-            "offices": "office_parking",  # To office!
-        },
+        exits=[
+            Exit(
+                keyword="down",
+                target_room_id="subway_control",
+                movement_phrase="descend back to the control room",
+            ),
+            Exit(
+                keyword="neon",
+                target_room_id="cyber_street",
+                movement_phrase="head toward the neon lights",
+            ),
+            Exit(
+                keyword="offices",
+                target_room_id="office_parking",
+                movement_phrase="walk toward the office buildings",
+            ),
+        ],
     )
 
     # ============================================
@@ -382,11 +673,23 @@ def create_expanded_seed_world() -> World:
             "everything. Mushrooms glow faintly in the shadows. The path splits "
             "in multiple directions."
         ),
-        connections={
-            "clearing": "nexus_clearing",
-            "deeper": "forest_deep",
-            "stream": "forest_stream",
-        },
+        exits=[
+            Exit(
+                keyword="clearing",
+                target_room_id="nexus_clearing",
+                movement_phrase="return to the clearing",
+            ),
+            Exit(
+                keyword="deeper",
+                target_room_id="forest_deep",
+                movement_phrase="venture deeper into the woods",
+            ),
+            Exit(
+                keyword="stream",
+                target_room_id="forest_stream",
+                movement_phrase="follow the sound of water",
+            ),
+        ],
     )
 
     forest_deep = Room(
@@ -397,11 +700,23 @@ def create_expanded_seed_world() -> World:
             "strange sounds - birds that don't sound quite right. An old stone "
             "structure is visible through the trees."
         ),
-        connections={
-            "grove": "forest_grove",
-            "ruins": "forest_ruins",
-            "hollow": "museum_storage",  # Secret passage!
-        },
+        exits=[
+            Exit(
+                keyword="grove",
+                target_room_id="forest_grove",
+                movement_phrase="return to the grove",
+            ),
+            Exit(
+                keyword="ruins",
+                target_room_id="forest_ruins",
+                movement_phrase="approach the stone ruins",
+            ),
+            Exit(
+                keyword="hollow",
+                target_room_id="museum_storage",
+                movement_phrase="crawl through the hollow tree",
+            ),
+        ],
     )
 
     forest_stream = Room(
@@ -412,11 +727,23 @@ def create_expanded_seed_world() -> World:
             "stepping stones. The water is impossibly clear. You swear you can see "
             "subway tiles at the bottom of the deeper pools."
         ),
-        connections={
-            "grove": "forest_grove",
-            "upstream": "forest_waterfall",
-            "downstream": "forest_pond",
-        },
+        exits=[
+            Exit(
+                keyword="grove",
+                target_room_id="forest_grove",
+                movement_phrase="return to the grove",
+            ),
+            Exit(
+                keyword="upstream",
+                target_room_id="forest_waterfall",
+                movement_phrase="walk upstream",
+            ),
+            Exit(
+                keyword="downstream",
+                target_room_id="forest_pond",
+                movement_phrase="follow the stream downstream",
+            ),
+        ],
     )
 
     forest_waterfall = Room(
@@ -427,7 +754,18 @@ def create_expanded_seed_world() -> World:
             "make out what looks like a cave entrance. The mist creates rainbows "
             "in the filtered sunlight."
         ),
-        connections={"stream": "forest_stream", "behind": "forest_cave"},
+        exits=[
+            Exit(
+                keyword="stream",
+                target_room_id="forest_stream",
+                movement_phrase="return to the stream",
+            ),
+            Exit(
+                keyword="behind",
+                target_room_id="forest_cave",
+                movement_phrase="slip behind the waterfall",
+            ),
+        ],
     )
 
     forest_cave = Room(
@@ -438,10 +776,18 @@ def create_expanded_seed_world() -> World:
             "there's modern camping equipment and... is that a WiFi router? "
             "A narrow passage leads deeper."
         ),
-        connections={
-            "waterfall": "forest_waterfall",
-            "squeeze": "cyber_apartment",  # Why not!
-        },
+        exits=[
+            Exit(
+                keyword="waterfall",
+                target_room_id="forest_waterfall",
+                movement_phrase="exit through the waterfall",
+            ),
+            Exit(
+                keyword="squeeze",
+                target_room_id="cyber_apartment",
+                movement_phrase="squeeze through the narrow passage",
+            ),
+        ],
     )
 
     forest_pond = Room(
@@ -452,7 +798,18 @@ def create_expanded_seed_world() -> World:
             "on the surface. When you look closely at your reflection, the "
             "background shows a different place each time."
         ),
-        connections={"stream": "forest_stream", "around": "forest_ruins"},
+        exits=[
+            Exit(
+                keyword="stream",
+                target_room_id="forest_stream",
+                movement_phrase="follow the stream back",
+            ),
+            Exit(
+                keyword="around",
+                target_room_id="forest_ruins",
+                movement_phrase="walk around the pond",
+            ),
+        ],
     )
 
     forest_ruins = Room(
@@ -463,11 +820,23 @@ def create_expanded_seed_world() -> World:
             "The architecture doesn't match any known civilization. A doorway "
             "still stands, though it should lead nowhere."
         ),
-        connections={
-            "woods": "forest_deep",
-            "pond": "forest_pond",
-            "doorway": "museum_ancient",  # To museum!
-        },
+        exits=[
+            Exit(
+                keyword="woods",
+                target_room_id="forest_deep",
+                movement_phrase="return to the deep woods",
+            ),
+            Exit(
+                keyword="pond",
+                target_room_id="forest_pond",
+                movement_phrase="walk to the pond",
+            ),
+            Exit(
+                keyword="doorway",
+                target_room_id="museum_ancient",
+                movement_phrase="step through the ancient doorway",
+            ),
+        ],
     )
 
     # ============================================
@@ -481,12 +850,28 @@ def create_expanded_seed_world() -> World:
             "that's unmanned. Banners advertise exhibitions that seem to change "
             "when you're not looking. A door leads back to... a forest?"
         ),
-        connections={
-            "forest": "nexus_clearing",
-            "exhibits": "museum_main",
-            "stairs": "museum_upper",
-            "staff": "museum_storage",
-        },
+        exits=[
+            Exit(
+                keyword="forest",
+                target_room_id="nexus_clearing",
+                movement_phrase="exit to the forest",
+            ),
+            Exit(
+                keyword="exhibits",
+                target_room_id="museum_main",
+                movement_phrase="enter the main exhibits",
+            ),
+            Exit(
+                keyword="stairs",
+                target_room_id="museum_upper",
+                movement_phrase="climb the grand staircase",
+            ),
+            Exit(
+                keyword="staff",
+                target_room_id="museum_storage",
+                movement_phrase="slip through the staff door",
+            ),
+        ],
     )
 
     museum_main = Room(
@@ -497,11 +882,23 @@ def create_expanded_seed_world() -> World:
             "together. A T-Rex skeleton stands next to a space shuttle. Medieval "
             "armor faces off against robot prototypes."
         ),
-        connections={
-            "lobby": "museum_lobby",
-            "ancient": "museum_ancient",
-            "future": "museum_future",
-        },
+        exits=[
+            Exit(
+                keyword="lobby",
+                target_room_id="museum_lobby",
+                movement_phrase="return to the lobby",
+            ),
+            Exit(
+                keyword="ancient",
+                target_room_id="museum_ancient",
+                movement_phrase="visit the ancient wing",
+            ),
+            Exit(
+                keyword="future",
+                target_room_id="museum_future",
+                movement_phrase="explore the future wing",
+            ),
+        ],
     )
 
     museum_ancient = Room(
@@ -512,10 +909,18 @@ def create_expanded_seed_world() -> World:
             "are behind glass, others invite touching. A doorway that looks like "
             "it belongs in ruins leads somewhere unexpected."
         ),
-        connections={
-            "main": "museum_main",
-            "doorway": "forest_ruins",  # Back to forest!
-        },
+        exits=[
+            Exit(
+                keyword="main",
+                target_room_id="museum_main",
+                movement_phrase="return to the main hall",
+            ),
+            Exit(
+                keyword="doorway",
+                target_room_id="forest_ruins",
+                movement_phrase="step through the ancient doorway",
+            ),
+        ],
     )
 
     museum_future = Room(
@@ -526,10 +931,18 @@ def create_expanded_seed_world() -> World:
             "holograms demonstrate impossible inventions. One exhibit is just a "
             "door labeled 'Staff Only' that hums with electricity."
         ),
-        connections={
-            "main": "museum_main",
-            "humming": "cyber_apartment",  # To cyberpunk!
-        },
+        exits=[
+            Exit(
+                keyword="main",
+                target_room_id="museum_main",
+                movement_phrase="return to the main hall",
+            ),
+            Exit(
+                keyword="humming",
+                target_room_id="cyber_apartment",
+                movement_phrase="investigate the humming door",
+            ),
+        ],
     )
 
     museum_upper = Room(
@@ -540,7 +953,18 @@ def create_expanded_seed_world() -> World:
             "looking directly at them. Large windows show views of different "
             "places - a forest, a city, an office building."
         ),
-        connections={"stairs": "museum_lobby", "roof": "museum_roof"},
+        exits=[
+            Exit(
+                keyword="stairs",
+                target_room_id="museum_lobby",
+                movement_phrase="descend the grand staircase",
+            ),
+            Exit(
+                keyword="roof",
+                target_room_id="museum_roof",
+                movement_phrase="climb to the roof access",
+            ),
+        ],
     )
 
     museum_storage = Room(
@@ -551,10 +975,18 @@ def create_expanded_seed_world() -> World:
             "with impossible dates. A hollow tree trunk is marked 'Forest Exhibit' "
             "but seems to have depth beyond its size."
         ),
-        connections={
-            "lobby": "museum_lobby",
-            "tree": "forest_deep",  # To forest!
-        },
+        exits=[
+            Exit(
+                keyword="lobby",
+                target_room_id="museum_lobby",
+                movement_phrase="return to the lobby",
+            ),
+            Exit(
+                keyword="tree",
+                target_room_id="forest_deep",
+                movement_phrase="crawl through the hollow tree trunk",
+            ),
+        ],
     )
 
     museum_roof = Room(
@@ -565,10 +997,18 @@ def create_expanded_seed_world() -> World:
             "leftover AC units. A makeshift bridge of planks leads to another building's "
             "roof. The view shows all the impossible geography."
         ),
-        connections={
-            "gallery": "museum_upper",
-            "planks": "cyber_rooftop",  # Rooftop network!
-        },
+        exits=[
+            Exit(
+                keyword="gallery",
+                target_room_id="museum_upper",
+                movement_phrase="return to the gallery",
+            ),
+            Exit(
+                keyword="planks",
+                target_room_id="cyber_rooftop",
+                movement_phrase="balance across the planks",
+            ),
+        ],
     )
 
     # Add all rooms to world
