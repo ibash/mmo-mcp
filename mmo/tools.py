@@ -5,6 +5,27 @@ from fastmcp import FastMCP, Context
 from fastmcp.server.dependencies import get_http_request
 from .errors import GameError
 from .game_world import world
+from .character_creation_guide import AUTONOMOUS_GUIDE, HUMAN_GUIDE
+
+
+def get_character_creation_guide(ctx: Context) -> str:
+    """Get the character creation guide with the optimized multi-stage approach.
+
+    IMPORTANT: Always call this BEFORE using create_character to ensure you follow
+    the proper process for creating unique, non-cliché characters."""
+
+    player_id = ctx.get_state("player_id")
+    autonomous = ctx.get_state("autonomous")
+
+    # Check if player already exists
+    if world.player_exists(player_id):
+        player = world.players[player_id]
+        return f"You already have a character named {player.name}. No need for the creation guide!"
+
+    if autonomous:
+        return AUTONOMOUS_GUIDE
+    else:
+        return HUMAN_GUIDE
 
 
 def look(ctx: Context) -> str:
@@ -26,7 +47,10 @@ class CreateCharacterInput(BaseModel):
 
 
 def create_character(ctx: Context, input: CreateCharacterInput) -> str:
-    """Create a new character for the player."""
+    """Create a new character for the player.
+
+    IMPORTANT: Always call get_character_creation_guide FIRST to ensure you follow
+    the proper multi-stage process for creating unique, memorable characters."""
 
     player_id = ctx.get_state("player_id")
     if not player_id:
@@ -171,6 +195,7 @@ def whoami(ctx: Context) -> str:
 
 
 def register(mcp: FastMCP):
+    mcp.tool(get_character_creation_guide)
     mcp.tool(look)
     mcp.tool(create_character)
     mcp.tool(move)

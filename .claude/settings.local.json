@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pyright:*)"
+      "Bash(pyright:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
