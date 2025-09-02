@@ -1,5 +1,12 @@
 # TODO
 
+## Error Handling
+
+- [ ] **Fix error masking for GameError**: Currently fastmcp has internal error masking logic that we need to work around
+  - We want to mask internal errors for security (don't expose stack traces, etc.)
+  - EXCEPT for `GameError` exceptions - these are meant to be user-facing and should be shown to players
+  - Need to ensure GameErrors are properly propagated through fastmcp's error handling
+
 ## Prompt Adjustments
 
 - [ ] **Reduce fantasy bias in prompts**: Update prompts to tone down how much "fantasy" AIs inject when interacting with the world. Currently AIs are over-indexing on "dungeon crawler" to mean only dungeons/fantasy characters (wizards, knights, etc.). We want more of an open world exploration game - magic exists but the constant medieval fantasy tropes are becoming cliche. Consider:
