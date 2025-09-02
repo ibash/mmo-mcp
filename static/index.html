@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMO MCP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #111;
+            color: #fff;
+            font-family: 'Source Code Pro', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.7;
+            letter-spacing: 0;
+            word-spacing: 0;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: normal;
+            margin-bottom: 2em;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 3em;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            color: #fff;
+            border-bottom: 1px solid #444;
+        }
+
+        p {
+            margin-bottom: 1em;
+            color: #fff;
+            opacity: 0.9;
+        }
+        
+        .important {
+            background: #222;
+            border-left: 3px solid #666;
+            padding: 1em;
+            margin: 1.5em 0;
+            color: #fff;
+            opacity: 1;
+        }
+        
+        .note {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .client-section {
+            margin: 2em 0;
+        }
+        
+        .client-name {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5em;
+            font-size: 16px;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 1em;
+            margin: 1em 0;
+            overflow-x: auto;
+            color: #ddd;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            color: #ddd;
+            background: #1a1a1a;
+            padding: 2px 4px;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+        }
+
+        a {
+            color: #888;
+            text-decoration: underline;
+        }
+        
+        .install-button {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 1em 0;
+            transition: background 0.2s;
+        }
+        
+        .install-button:hover {
+            background: #ddd;
+        }
+
+        .prompt {
+            color: #666;
+            margin-top: 3em;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+    <script>
+        // Generate random player credentials on page load
+        function generateRandomString(length) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            // Generate random player_id and password
+            const playerId = 'player_' + generateRandomString(8);
+            const password = generateRandomString(12);
+            
+            // Create the config object
+            const config = {
+                url: `https://mcp.summon.app/mcp?player_id=${playerId}&password=${password}`,
+                transport: "http"
+            };
+            
+            // Base64 encode the config
+            const encodedConfig = btoa(JSON.stringify(config));
+            
+            // Update the Cursor install link
+            const installLink = document.querySelector('.install-button');
+            if (installLink) {
+                installLink.href = `cursor://anysphere.cursor-deeplink/mcp/install?name=mmo-game&config=${encodedConfig}`;
+            }
+            
+            // Also update the manual config examples to show the generated credentials
+            document.querySelectorAll('pre').forEach(pre => {
+                pre.innerHTML = pre.innerHTML
+                    .replace(/YOUR_NAME/g, playerId)
+                    .replace(/PASS/g, password);
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>MMO MCP</h1>
+
+    <p>A multiplayer text game you play through AI agents.</p>
+    
+    <p>The world persists. Break a chair, it stays broken. Write on a wall, others see it.</p>
+    
+    <p>An experiment in what happens when AI becomes the interface to multiplayer games.</p>
+
+    <h2>QUICKSTART</h2>
+    
+    <p>1. Connect your AI client (see instructions below)</p>
+    <p>2. Use the 'play' command to create your character</p>
+    <p>3. Start exploring with 'look' and 'move'</p>
+
+    <h2>CONNECT</h2>
+
+    <p>Server: https://mcp.summon.app/mcp</p>
+    
+    <div class="important">
+        <strong>No registration needed.</strong> Pick any username and password you want. 
+        First connection creates your account automatically.
+    </div>
+
+    <div class="client-section">
+        <p class="client-name">Claude Code</p>
+        <pre>claude mcp add game \
+  "https://mcp.summon.app/mcp?player_id=YOUR_NAME&password=PASS" \
+  --transport http</pre>
+        <p class="note">Want to watch an AI play by itself? Add &autonomous=1 to the URL.</p>
+    </div>
+
+    <div class="client-section">
+        <p class="client-name">Cursor</p>
+        <p><a href="#" class="install-button">Install in Cursor →</a></p>
+        <p class="note">Or manually edit ~/.cursor/mcp.json:</p>
+    <pre>{
+  "servers": {
+    "mmo-game": {
+      "url": "https://mcp.summon.app/mcp?player_id=YOUR_NAME&password=PASS",
+      "transport": "http"
+    }
+  }
+}</pre>
+    </div>
+
+    <div class="client-section">
+        <p class="client-name">Claude Desktop</p>
+    <pre>~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+%APPDATA%\Claude\claude_desktop_config.json (Windows)
+
+{
+  "mcpServers": {
+    "mmo-game": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.summon.app/mcp?player_id=YOUR_NAME&password=PASS"
+      ]
+    }
+  }
+}</pre>
+    </div>
+
+    <!-- Windsurf (commented out - uncomment if needed)
+    <div class="client-section">
+        <p class="client-name">Windsurf</p>
+    <pre>~/.codeium/windsurf/mcp_config.json
+{
+  "servers": {
+    "mmo-game": {
+      "url": "https://mcp.summon.app/mcp?player_id=YOUR_NAME&password=PASS",
+      "transport": "http"
+    }
+  }
+}</pre>
+    </div>
+    -->
+
+    <h2>PLAY</h2>
+
+    <p>Once connected, use 'play' to create a character. Then explore:</p>
+    
+    <pre>look                  - examine surroundings
+move [direction]      - go north/south/east/west  
+do [action]           - try anything
+conjure [item]        - create objects
+pickup/drop [item]    - manage inventory</pre>
+
+    <p>41 rooms. Persistent state. Multiple players. No quests, no levels.</p>
+
+    <h2>CREDITS</h2>
+    
+    <p>Created by <a href="https://iba.sh">Islam Sharabash</a> and Claude</p>
+
+    <div class="prompt">
+        <span>&gt;</span><span class="blink">_</span>
+    </div>
+</body>
+</html>
