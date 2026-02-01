@@ -113,7 +113,6 @@ class DoInput(BaseModel):
     )
 
 
-# TODO(ibash) we need to add a "do" prompt, too.
 async def do(ctx: Context, input: DoInput) -> str:
     """Perform an arbitrary action that affects the world."""
 
