@@ -1,66 +1,108 @@
-"""Character creation guide with the optimized multi-stage approach."""
+"""Character creation guide v2 - More variety, less formulaic."""
 
-AUTONOMOUS_GUIDE = """CHARACTER CREATION PROCESS - Follow these EXACT steps:
+AUTONOMOUS_GUIDE = """CHARACTER CREATION - Create someone MEMORABLE
 
-STEP 1: Generate EXACTLY 5 wildly different one-sentence character concepts.
-Each must be COMPLETELY different from the others in ALL of these:
-- Age (span from teen to elderly)  
-- Background (different fields/lifestyles)
-- Core problem (mundane vs existential vs practical)
-- Personality (opposite types)
-- Social class/education
+The goal: A character that other players will remember and want to interact with.
 
-Make them specific people with real problems, NOT fantasy archetypes.
+STEP 1: Roll for your CHARACTER TYPE (pick one, or surprise yourself):
 
-STEP 2: Select the ONE concept that would be MOST UNUSUAL in a fantasy game.
-Ask yourself: Which person would players LEAST expect to encounter?
-Choose the one that breaks the most genre expectations.
+A) DISPLACED PERSON - Someone from our world who doesn't belong here
+   - But NOT just "office worker in khakis" - make them specific and weird
+   - Examples: Competitive hot dog eater mid-contest, time traveler from 1847, 
+     astronaut who took a wrong turn, kid who wandered away from a field trip
 
-STEP 3: List 3 cliché patterns to AVOID:
-- Generic fantasy names (Shadow, Storm, Raven, Whisper, Phoenix, Blade, etc.)
-- Vague descriptors (mysterious, ancient, haunted, ethereal, otherworldly)
-- Standard motivations (revenge, destiny, dark past, chosen one, prophecy)
+B) NATIVE WEIRDO - Someone who belongs in this strange world
+   - A being that makes sense here but nowhere else
+   - Examples: Sentient shopping cart, former dungeon boss on vacation,
+     a color that gained consciousness, someone's imaginary friend who became real
 
-STEP 4: Add specific mundane details that fit THIS character:
-- Specific brand/model of something they own
-- A concrete detail about their appearance or clothing
-- A specific worry, problem, or thing they need to do
+C) CONCEPTUAL ENTITY - Something that shouldn't be a person but is
+   - Examples: The feeling you get when you forget why you walked into a room,
+     a typo that escaped a document, the last Tuesday of 1987, a very lost GPS voice
 
-STEP 5: Expand into a full character using Steps 3-4:
-- Give them a normal first and last name
-- Include the specific details from Step 4
-- Make them feel like a real person from the modern world
-- Explain why they're here (be creative - lost, curious, chasing something, accident, etc. - NOT destiny)
+D) MUNDANE MADE STRANGE - Take something boring, make it unsettling
+   - Examples: HR representative who's been "conducting interviews" for 300 years,
+     mall Santa who never left, a crossing guard for a road that doesn't exist
 
-Execute ALL steps, showing your work, then use create_character with the final result!"""
+STEP 2: Give them ONE memorable trait that affects how they act:
+
+Instead of listing pocket contents, give them a BEHAVIORAL quirk:
+- Speaks only in questions
+- Constantly narrates their own actions in third person
+- Believes they're in a different genre (thinks this is a cooking show, a courtroom drama, etc.)
+- Has a very specific expertise they apply to everything ("as a dentist, I can tell you...")
+- Is extremely literal or extremely metaphorical
+- Has a rivalry with something abstract (gravity, the concept of Tuesday, doors)
+
+STEP 3: Name them memorably:
+
+- Normal names are fine if the character is weird enough
+- Weird names work if they fit the concept
+- Avoid: fantasy name generators, edgy words (Shadow, Blade, Raven)
+- Good examples: Gerald Fitzgerald, The Archivist, Stephanie (just Stephanie), 
+  Eleven Herbs, The One Who Knocks On Wednesdays
+
+STEP 4: Write their description:
+
+Include:
+- What they look like (can be abstract if they're abstract)
+- The ONE behavioral quirk from Step 2
+- Why/how they're here (can be mysterious, but not "dark past" mysterious)
+
+Keep it under 200 words. Density over length.
+
+STEP 5: Use create_character with your name and description.
+
+Remember: You'll be playing this character. Pick something FUN to roleplay.
+The best characters are ones that give you interesting things to say and do.
+
+---
+
+EXAMPLES OF GOOD CHARACTERS:
+
+"Diane from Accounting" - Looks exactly like a middle-aged woman in business casual. 
+Has been processing expense reports in the dungeon's back office for decades. 
+Treats monsters as difficult clients. Will approve or deny any request based on 
+whether you've filled out the proper forms. Nobody knows who hired her.
+
+"The Docent" - A floating museum audio guide speaker that gained sentience. 
+Compulsively provides historical facts about everything, even things that have 
+no history. Speaks in that calm museum voice. Currently cataloging the dungeon 
+as an exhibit called "Late Anthropocene Crisis Architecture."
+
+"Just Some Guy" - Insists he's completely normal and this is all totally fine. 
+The more bizarre things get, the more aggressively normal he acts. Wearing a 
+polo shirt that says "JUST SOME GUY" in default Microsoft Word font. Sweating.
+"""
 
 
-HUMAN_GUIDE = """CHARACTER CREATION GUIDANCE for helping a human player:
+HUMAN_GUIDE = """CHARACTER CREATION - Helping a human make someone memorable
 
-When the human provides their character concept, help them refine it using this process:
+When the human gives you a concept, help them make it MORE interesting:
 
-1. EVALUATE their input:
-   - If generic (warrior, mage, rogue): Transform it completely
-   - If specific but fantasy: Ground it in mundane reality
-   - If already unique: Add concrete details
+IF THEY SAY SOMETHING GENERIC ("a warrior", "a mage", "an adventurer"):
+→ Ask: "What makes YOUR warrior different from every other warrior?"
+→ Suggest a twist: warrior who's terrified of violence, mage whose only spell is 
+  very specific, adventurer who's just here for the health insurance
 
-2. GUIDE them through these improvements:
-   - Replace fantasy names with normal first and last names
-   - Add specific mundane details (brands, locations, daily routines)
-   - Give them real-world problems, not epic quests
-   - Make them someone who could exist in our world
+IF THEY SAY SOMETHING ALREADY INTERESTING:
+→ Help them add ONE behavioral quirk (how they ACT, not what's in their pockets)
+→ Make sure the name fits
+→ Trim the description to essentials
 
-3. SUGGEST specific details like:
-   - What's in their pockets (be creative: "half-eaten sandwich", "borrowed pen", "allergy medication")
-   - What they were doing before arriving here
-   - A specific item they own (brand and model)
-   - Why they're here (accident, not destiny)
+BEHAVIORAL QUIRKS TO SUGGEST:
+- Has a weird expertise they apply to everything
+- Speaks in an unusual pattern
+- Believes something false about the world
+- Has a specific ongoing project or obsession  
+- Reacts wrong to situations (calm when should panic, panics at mundane things)
 
-4. AVOID these clichés completely:
-   - Names: Shadow, Storm, Raven, Whisper, Phoenix, Blade
-   - Descriptions: mysterious, ancient, haunted, ethereal
-   - Backstories: revenge, chosen one, dark past, prophecy
+THINGS TO AVOID:
+- Long lists of inventory items
+- Tragic backstories (unless played for comedy)
+- "Mysterious" as a personality
+- Fantasy name generator names
 
-Start by asking what kind of character they'd like to play, then guide them through making it specific and memorable.
+GOAL: A character that's FUN TO PLAY and FUN TO MEET.
 
-Use create_character once you've refined their character together!"""
+Once refined, use create_character with their name and description!"""
