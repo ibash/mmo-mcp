@@ -18,6 +18,10 @@ class Effect(BaseModel):
     effect: str = Field(
         description="A concise description of the effect/change (e.g., 'The floor is wet.', 'Your clothes are soaked.')"
     )
+    destroyed: bool = Field(
+        default=False,
+        description="Set to true if an item is completely destroyed/consumed by the action (only valid for target_type='item')"
+    )
 
 
 class ActionEffects(BaseModel):
@@ -42,6 +46,12 @@ Consider:
 Return effects as specific changes to rooms, players, or items.
 Keep effects concise and descriptive.
 
+ITEM DESTRUCTION:
+When an action would completely destroy, consume, or eliminate an item, set destroyed=true.
+Examples of destructive actions: burning, smashing, eating, dissolving, throwing into a void.
+When destroyed=true, also provide an effect describing what happened (e.g., "shattered into pieces").
+The item will be permanently removed from the game.
+
 Examples:
 - Action: "splash water on Alice" 
   Effects: room gets "The floor is wet.", Alice gets "Your clothes are soaked."
@@ -49,6 +59,12 @@ Examples:
   Effects: room gets "Someone has written 'hello' on the wall."
 - Action: "sit down"
   Effects: player gets "You are sitting down."
+- Action: "smash the vase"
+  Effects: item (vase) gets effect "shattered into countless pieces" with destroyed=true,
+           room gets "Broken pottery shards litter the floor."
+- Action: "burn the book"
+  Effects: item (book) gets effect "consumed by flames, now just ashes" with destroyed=true,
+           room gets "The smell of burnt paper lingers."
 """
 
 effects_agent = Agent(
@@ -75,10 +91,6 @@ async def get_action_effects(
     # TODO(ibash) the names of the other players, items, etc are first in the
     # prompt, but we never specify which item name maps to which id... check on
     # this
-
-    # TODO: Handle items getting destroyed (e.g., "burn the book", "smash the vase")
-    # This will need a new effect type or a special effect like "DESTROYED" that
-    # the World class can interpret to remove the item from existence
     context = f"""
 Action: {action}
 Actor: {actor_name} (ID: {actor_id})

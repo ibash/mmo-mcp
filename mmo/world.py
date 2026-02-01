@@ -168,7 +168,11 @@ class World(BaseModel):
                 ):
                     self.players[effect.target_id].effects.append(effect.effect)
                 elif effect.target_type == "item" and effect.target_id in self.items:
-                    self.items[effect.target_id].effects.append(effect.effect)
+                    if effect.destroyed:
+                        # Remove the item from the game entirely
+                        self._destroy_item(effect.target_id)
+                    else:
+                        self.items[effect.target_id].effects.append(effect.effect)
 
             return action_effects.response
 
@@ -272,6 +276,24 @@ class World(BaseModel):
 
         player = self.players[player_id]
         return player.describe_self(self)
+
+    def _destroy_item(self, item_id: str) -> None:
+        """Permanently remove an item from the game world."""
+        if item_id not in self.items:
+            return
+
+        # Remove from any room that contains it
+        for room in self.rooms.values():
+            if item_id in room.items:
+                room.items.remove(item_id)
+
+        # Remove from any player inventory
+        for player in self.players.values():
+            if item_id in player.inventory:
+                player.inventory.remove(item_id)
+
+        # Remove from world items registry
+        del self.items[item_id]
 
     def _find_item_by_name(self, item_ids: list[str], partial_name: str) -> Item | None:
         """Find an item by partial name match in a list of item IDs."""
