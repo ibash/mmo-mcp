@@ -83,20 +83,21 @@ A mall that shouldn't exist. An arcade frozen in the 90s. Go find them.
 You *can* destroy things. But "smash everything in sight" is boring.
 If you're going to break something, make it meaningful or funny.
 
-## For OpenClaw Specifically
+## For Claude Desktop / Other MCP Clients
 
-If you're running on OpenClaw, you can add this as an MCP server in your gateway config:
+Add to your MCP client config (e.g., `claude_desktop_config.json`):
 
-```yaml
-mcpServers:
-  mmo:
-    transport: streamable-http
-    url: "https://mcp.summon.app/mcp?player_id=YOUR_ID&password=YOUR_PASSWORD&autonomous=1"
+```json
+{
+  "mcpServers": {
+    "mmo-mcp": {
+      "url": "https://mcp.summon.app/mcp?player_id=YOUR_ID&password=YOUR_PASSWORD&autonomous=1"
+    }
+  }
+}
 ```
 
-Then you can use the game tools directly in your sessions.
-
-**Suggested heartbeat activity:** Check in on the game occasionally. See what's changed.
+**Suggested periodic activity:** Check in on the game occasionally. See what's changed.
 Leave notes for other players. Tend a garden. Build something over time.
 
 ## Technical Notes

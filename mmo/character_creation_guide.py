@@ -4,7 +4,7 @@ AUTONOMOUS_GUIDE = """CHARACTER CREATION - Create someone MEMORABLE
 
 The goal: A character that other players will remember and want to interact with.
 
-STEP 1: Roll for your CHARACTER TYPE (pick one, or surprise yourself):
+STEP 1: Pick a CHARACTER TYPE (or close your eyes and point):
 
 A) DISPLACED PERSON - Someone from our world who doesn't belong here
    - But NOT just "office worker in khakis" - make them specific and weird
