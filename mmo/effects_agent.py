@@ -88,24 +88,24 @@ async def get_action_effects(
 ) -> ActionEffects:
     """Interpret an action and return its effects on the world."""
 
-    # TODO(ibash) the names of the other players, items, etc are first in the
-    # prompt, but we never specify which item name maps to which id... check on
-    # this
+    # Build item and player mappings with clear ID associations
+    items_with_ids = [f"{name} (ID: {id})" for id, name in room_items.items()] if room_items else []
+    players_with_ids = [f"{name} (ID: {id})" for id, name in other_players.items()] if other_players else []
+
     context = f"""
 Action: {action}
 Actor: {actor_name} (ID: {actor_id})
 Room: {room_description} (ID: {room_id})
-Other players in room: {", ".join(other_players.values()) if other_players else "None"}
-Items in room: {", ".join(room_items.values()) if room_items else "None"}
+Other players in room: {", ".join(players_with_ids) if players_with_ids else "None"}
+Items in room: {", ".join(items_with_ids) if items_with_ids else "None"}
 
 Determine the effects of this action. Consider:
-1. Effects on the room itself
-2. Effects on the actor
-3. Effects on other players mentioned in the action
-4. Effects on items mentioned in the action
+1. Effects on the room itself (use room ID: {room_id})
+2. Effects on the actor (use player ID: {actor_id})
+3. Effects on other players mentioned in the action (use their IDs)
+4. Effects on items mentioned in the action (use their IDs)
 
-Available player IDs: {list(other_players.keys()) if other_players else []}
-Available item IDs: {list(room_items.keys()) if room_items else []}
+IMPORTANT: When targeting items for effects (especially destruction), use the exact item ID shown above.
 """
 
     result = await effects_agent.run(context)
