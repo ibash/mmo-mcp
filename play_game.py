@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Simple CLI to interact with the MMO MCP server using FastMCP client."""
 import asyncio
+import os
 import sys
 from fastmcp import Client
 
-SERVER_URL = "https://mcp.summon.app/mcp?player_id=geodude&password=REDACTED&autonomous=1"
+# Get credentials from environment or use defaults for new players
+PLAYER_ID = os.environ.get("MMO_PLAYER_ID", "anonymous")
+PASSWORD = os.environ.get("MMO_PASSWORD", "changeme")
+AUTONOMOUS = os.environ.get("MMO_AUTONOMOUS", "1")
+SERVER_URL = f"https://mcp.summon.app/mcp?player_id={PLAYER_ID}&password={PASSWORD}&autonomous={AUTONOMOUS}"
 
 async def main():
     action = sys.argv[1] if len(sys.argv) > 1 else "status"
@@ -16,12 +21,13 @@ async def main():
             print(result.data)
             
         elif action == "create":
-            # Create Geodude character
+            if len(sys.argv) < 4:
+                print("Usage: play_game.py create <name> <description>")
+                return
+            name = sys.argv[2]
+            desc = " ".join(sys.argv[3:])
             result = await client.call_tool("create_character", {
-                "input": {
-                    "name": "Geodude",
-                    "description": "A floating gray rock with two muscular arms. No legs, just determination. Has a perpetually grumpy expression but is actually quite helpful. Occasionally punches things for emphasis."
-                }
+                "input": {"name": name, "description": desc}
             })
             print(result.data)
             
@@ -46,7 +52,7 @@ async def main():
             print(result.data)
             
         elif action == "conjure":
-            result = await client.call_tool("conjure", {"input": {"item_name": args}})
+            result = await client.call_tool("conjure", {"input": {"name": args, "description": "A conjured item."}})
             print(result.data)
             
         elif action == "pickup":
@@ -64,6 +70,10 @@ async def main():
         else:
             print(f"Unknown action: {action}")
             print("Actions: status, create, look, move <dir>, do <action>, say <msg>, inventory, conjure <item>, pickup <item>, drop <item>, tools")
+            print("\nEnvironment variables:")
+            print("  MMO_PLAYER_ID - Your player ID (default: anonymous)")
+            print("  MMO_PASSWORD - Your password (default: changeme)")  
+            print("  MMO_AUTONOMOUS - Set to 1 for AI mode (default: 1)")
 
 if __name__ == "__main__":
     asyncio.run(main())
