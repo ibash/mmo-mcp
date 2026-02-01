@@ -5,7 +5,7 @@ import os
 from fastmcp import Client
 
 PLAYER_ID = os.environ.get("MMO_PLAYER_ID", "geodude")
-PASSWORD = os.environ.get("MMO_PASSWORD", "REDACTED")
+PASSWORD = os.environ.get("MMO_PASSWORD", "changeme")
 SERVER_URL = f"https://mcp.summon.app/mcp?player_id={PLAYER_ID}&password={PASSWORD}&autonomous=1"
 
 async def main():
